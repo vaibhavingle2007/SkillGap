@@ -81,10 +81,17 @@ class RoadmapResponse(BaseModel):
     skill_roadmaps: list[SkillRoadmap]
 
 
+class AIYoutubeVideo(BaseModel):
+    title: str
+    video_id: str
+    thumbnail: str | None = None
+
+
 class AIRoadmapSkill(BaseModel):
     skill: str
     learning_steps: list[str]
     estimated_time: str
+    youtube_videos: list[AIYoutubeVideo] = []
 
 
 class AIRoadmapResponse(BaseModel):
