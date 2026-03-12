@@ -1,0 +1,241 @@
+{
+  "job_roles": [
+    {
+      "id": "frontend-developer",
+      "title": "Frontend Developer",
+      "description": "Build user interfaces and web applications using modern frontend technologies.",
+      "required_skills": [
+        {"name": "HTML", "proficiency": "advanced"},
+        {"name": "CSS", "proficiency": "advanced"},
+        {"name": "JavaScript", "proficiency": "advanced"},
+        {"name": "React", "proficiency": "intermediate"},
+        {"name": "TypeScript", "proficiency": "intermediate"},
+        {"name": "Git", "proficiency": "intermediate"},
+        {"name": "Responsive Design", "proficiency": "advanced"},
+        {"name": "REST APIs", "proficiency": "intermediate"}
+      ]
+    },
+    {
+      "id": "backend-developer",
+      "title": "Backend Developer",
+      "description": "Design and implement server-side logic, APIs, and database systems.",
+      "required_skills": [
+        {"name": "Python", "proficiency": "advanced"},
+        {"name": "SQL", "proficiency": "advanced"},
+        {"name": "REST APIs", "proficiency": "advanced"},
+        {"name": "Git", "proficiency": "intermediate"},
+        {"name": "Docker", "proficiency": "intermediate"},
+        {"name": "FastAPI", "proficiency": "intermediate"},
+        {"name": "PostgreSQL", "proficiency": "intermediate"},
+        {"name": "Linux", "proficiency": "intermediate"}
+      ]
+    },
+    {
+      "id": "data-scientist",
+      "title": "Data Scientist",
+      "description": "Analyze complex datasets and build predictive models using statistical and ML techniques.",
+      "required_skills": [
+        {"name": "Python", "proficiency": "advanced"},
+        {"name": "SQL", "proficiency": "intermediate"},
+        {"name": "Machine Learning", "proficiency": "advanced"},
+        {"name": "Pandas", "proficiency": "advanced"},
+        {"name": "NumPy", "proficiency": "advanced"},
+        {"name": "Statistics", "proficiency": "advanced"},
+        {"name": "Data Visualization", "proficiency": "intermediate"},
+        {"name": "Scikit-learn", "proficiency": "intermediate"}
+      ]
+    },
+    {
+      "id": "devops-engineer",
+      "title": "DevOps Engineer",
+      "description": "Automate infrastructure, CI/CD pipelines, and manage cloud deployments.",
+      "required_skills": [
+        {"name": "Linux", "proficiency": "advanced"},
+        {"name": "Docker", "proficiency": "advanced"},
+        {"name": "Kubernetes", "proficiency": "intermediate"},
+        {"name": "CI/CD", "proficiency": "advanced"},
+        {"name": "AWS", "proficiency": "intermediate"},
+        {"name": "Terraform", "proficiency": "intermediate"},
+        {"name": "Python", "proficiency": "intermediate"},
+        {"name": "Git", "proficiency": "advanced"}
+      ]
+    },
+    {
+      "id": "fullstack-developer",
+      "title": "Full Stack Developer",
+      "description": "Develop both client-side and server-side software for complete web applications.",
+      "required_skills": [
+        {"name": "HTML", "proficiency": "advanced"},
+        {"name": "CSS", "proficiency": "intermediate"},
+        {"name": "JavaScript", "proficiency": "advanced"},
+        {"name": "React", "proficiency": "intermediate"},
+        {"name": "Node.js", "proficiency": "intermediate"},
+        {"name": "SQL", "proficiency": "intermediate"},
+        {"name": "REST APIs", "proficiency": "advanced"},
+        {"name": "Git", "proficiency": "intermediate"},
+        {"name": "Docker", "proficiency": "beginner"}
+      ]
+    },
+    {
+      "id": "ml-engineer",
+      "title": "Machine Learning Engineer",
+      "description": "Build and deploy machine learning models into production systems.",
+      "required_skills": [
+        {"name": "Python", "proficiency": "advanced"},
+        {"name": "Machine Learning", "proficiency": "advanced"},
+        {"name": "Deep Learning", "proficiency": "intermediate"},
+        {"name": "TensorFlow", "proficiency": "intermediate"},
+        {"name": "Docker", "proficiency": "intermediate"},
+        {"name": "SQL", "proficiency": "intermediate"},
+        {"name": "MLOps", "proficiency": "intermediate"},
+        {"name": "Git", "proficiency": "intermediate"}
+      ]
+    }
+  ],
+  "roadmap_templates": {
+    "beginner": {
+      "duration_weeks": 8,
+      "steps": [
+        "Learn fundamentals through documentation and tutorials",
+        "Complete beginner-level exercises and projects",
+        "Build a small personal project",
+        "Practice with coding challenges"
+      ]
+    },
+    "intermediate": {
+      "duration_weeks": 12,
+      "steps": [
+        "Review fundamentals and fill knowledge gaps",
+        "Study intermediate-level concepts and patterns",
+        "Contribute to open-source or build a portfolio project",
+        "Practice with real-world scenarios and case studies",
+        "Get peer code reviews"
+      ]
+    },
+    "advanced": {
+      "duration_weeks": 16,
+      "steps": [
+        "Deep dive into advanced concepts and internals",
+        "Study best practices and design patterns",
+        "Build a complex, production-grade project",
+        "Mentor others or write technical articles",
+        "Contribute to open-source projects",
+        "Prepare for technical interviews at senior level"
+      ]
+    }
+  },
+  "youtube_resources": {
+    "HTML": [
+      {"title": "HTML Full Course for Beginners", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=html-course"},
+      {"title": "HTML Crash Course", "channel": "Traversy Media", "url": "https://youtube.com/watch?v=html-crash"}
+    ],
+    "CSS": [
+      {"title": "CSS Complete Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=css-course"},
+      {"title": "CSS Flexbox & Grid", "channel": "Traversy Media", "url": "https://youtube.com/watch?v=css-flexgrid"}
+    ],
+    "JavaScript": [
+      {"title": "JavaScript Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=js-full"},
+      {"title": "Modern JavaScript Tutorial", "channel": "The Net Ninja", "url": "https://youtube.com/watch?v=js-modern"}
+    ],
+    "Python": [
+      {"title": "Python for Beginners", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=python-beginners"},
+      {"title": "Python Full Course", "channel": "Corey Schafer", "url": "https://youtube.com/watch?v=python-full"}
+    ],
+    "React": [
+      {"title": "React Full Course 2024", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=react-full"},
+      {"title": "React Tutorial for Beginners", "channel": "Codevolution", "url": "https://youtube.com/watch?v=react-beginners"}
+    ],
+    "TypeScript": [
+      {"title": "TypeScript Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=ts-full"},
+      {"title": "TypeScript for React Developers", "channel": "Jack Herrington", "url": "https://youtube.com/watch?v=ts-react"}
+    ],
+    "SQL": [
+      {"title": "SQL Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=sql-full"},
+      {"title": "SQL Tutorial", "channel": "Programming with Mosh", "url": "https://youtube.com/watch?v=sql-mosh"}
+    ],
+    "Git": [
+      {"title": "Git and GitHub for Beginners", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=git-beginners"},
+      {"title": "Git Tutorial", "channel": "Corey Schafer", "url": "https://youtube.com/watch?v=git-corey"}
+    ],
+    "Docker": [
+      {"title": "Docker Full Course", "channel": "TechWorld with Nana", "url": "https://youtube.com/watch?v=docker-nana"},
+      {"title": "Docker for Beginners", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=docker-fcc"}
+    ],
+    "REST APIs": [
+      {"title": "REST API Design Best Practices", "channel": "Traversy Media", "url": "https://youtube.com/watch?v=rest-api"},
+      {"title": "Build a REST API with Python", "channel": "Tech With Tim", "url": "https://youtube.com/watch?v=rest-python"}
+    ],
+    "Machine Learning": [
+      {"title": "Machine Learning Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=ml-full"},
+      {"title": "ML for Beginners", "channel": "StatQuest", "url": "https://youtube.com/watch?v=ml-statquest"}
+    ],
+    "Deep Learning": [
+      {"title": "Deep Learning Specialization", "channel": "DeepLearning.AI", "url": "https://youtube.com/watch?v=dl-deeplearningai"},
+      {"title": "Neural Networks from Scratch", "channel": "3Blue1Brown", "url": "https://youtube.com/watch?v=dl-3b1b"}
+    ],
+    "Kubernetes": [
+      {"title": "Kubernetes Full Course", "channel": "TechWorld with Nana", "url": "https://youtube.com/watch?v=k8s-nana"},
+      {"title": "Kubernetes Tutorial", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=k8s-fcc"}
+    ],
+    "AWS": [
+      {"title": "AWS Certified Cloud Practitioner", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=aws-ccp"},
+      {"title": "AWS for Beginners", "channel": "TechWorld with Nana", "url": "https://youtube.com/watch?v=aws-nana"}
+    ],
+    "FastAPI": [
+      {"title": "FastAPI Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=fastapi-fcc"},
+      {"title": "FastAPI Tutorial", "channel": "Bitfumes", "url": "https://youtube.com/watch?v=fastapi-bitfumes"}
+    ],
+    "Node.js": [
+      {"title": "Node.js Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=node-fcc"},
+      {"title": "Node.js Tutorial", "channel": "The Net Ninja", "url": "https://youtube.com/watch?v=node-netninja"}
+    ],
+    "Responsive Design": [
+      {"title": "Responsive Web Design", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=responsive-fcc"},
+      {"title": "CSS Media Queries", "channel": "Kevin Powell", "url": "https://youtube.com/watch?v=responsive-kevin"}
+    ],
+    "PostgreSQL": [
+      {"title": "PostgreSQL Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=pg-fcc"},
+      {"title": "PostgreSQL Tutorial", "channel": "Amigoscode", "url": "https://youtube.com/watch?v=pg-amigos"}
+    ],
+    "Linux": [
+      {"title": "Linux Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=linux-fcc"},
+      {"title": "Linux Command Line", "channel": "NetworkChuck", "url": "https://youtube.com/watch?v=linux-chuck"}
+    ],
+    "Pandas": [
+      {"title": "Pandas Tutorial", "channel": "Corey Schafer", "url": "https://youtube.com/watch?v=pandas-corey"},
+      {"title": "Data Analysis with Pandas", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=pandas-fcc"}
+    ],
+    "NumPy": [
+      {"title": "NumPy Full Tutorial", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=numpy-fcc"},
+      {"title": "NumPy for Beginners", "channel": "Keith Galli", "url": "https://youtube.com/watch?v=numpy-keith"}
+    ],
+    "Statistics": [
+      {"title": "Statistics Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=stats-fcc"},
+      {"title": "Statistics Fundamentals", "channel": "StatQuest", "url": "https://youtube.com/watch?v=stats-statquest"}
+    ],
+    "Data Visualization": [
+      {"title": "Data Visualization with Python", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=dataviz-fcc"},
+      {"title": "Matplotlib Tutorial", "channel": "Corey Schafer", "url": "https://youtube.com/watch?v=dataviz-corey"}
+    ],
+    "Scikit-learn": [
+      {"title": "Scikit-learn Tutorial", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=sklearn-fcc"},
+      {"title": "Machine Learning with Scikit-learn", "channel": "Data School", "url": "https://youtube.com/watch?v=sklearn-dataschool"}
+    ],
+    "CI/CD": [
+      {"title": "CI/CD Full Course", "channel": "TechWorld with Nana", "url": "https://youtube.com/watch?v=cicd-nana"},
+      {"title": "GitHub Actions Tutorial", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=cicd-fcc"}
+    ],
+    "Terraform": [
+      {"title": "Terraform Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=terraform-fcc"},
+      {"title": "Terraform Tutorial", "channel": "TechWorld with Nana", "url": "https://youtube.com/watch?v=terraform-nana"}
+    ],
+    "TensorFlow": [
+      {"title": "TensorFlow Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=tf-fcc"},
+      {"title": "TensorFlow Tutorial", "channel": "TensorFlow", "url": "https://youtube.com/watch?v=tf-official"}
+    ],
+    "MLOps": [
+      {"title": "MLOps Full Course", "channel": "freeCodeCamp", "url": "https://youtube.com/watch?v=mlops-fcc"},
+      {"title": "MLOps Zoomcamp", "channel": "DataTalks.Club", "url": "https://youtube.com/watch?v=mlops-zoomcamp"}
+    ]
+  }
+}
