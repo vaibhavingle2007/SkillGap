@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { jobRoles } from "@/data/mockData";
 import AnalysisResults, { AnalysisResponse } from "./AnalysisResults";
+import { useAuth } from "@/context/AuthContext";
+import { saveUserAnalysis } from "@/lib/userData";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -23,6 +25,10 @@ export default function SkillForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<AnalysisResponse | null>(null);
+  const [savedToCloud, setSavedToCloud] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const { user } = useAuth();
 
   const toggleSkill = (skill: string) => {
     setSelectedSkills((prev) =>
@@ -52,6 +58,8 @@ export default function SkillForm() {
     setIsLoading(true);
     setError(null);
     setResults(null);
+    setSavedToCloud(false);
+    setSaveError(null);
 
     const role = jobRoles.find((r) => r.id === selectedRole);
 
@@ -79,10 +87,44 @@ export default function SkillForm() {
       }
 
       const data: AnalysisResponse = await res.json();
-      setResults({
+      const analysisResult = {
         ...data,
         target_role: role?.title || selectedRole,
-      });
+      };
+      setResults(analysisResult);
+
+      // Save to Firestore if user is logged in
+      if (user) {
+        try {
+          const skills = selectedSkills.map((skill) => ({
+            name: skill,
+            level: skillLevels[skill] || 50,
+          }));
+
+          // Get the match percentage - backend returns match_percentage
+          const matchPct = data.match_percentage ?? 0;
+
+          console.log("Saving analysis with:", {
+            targetRole: role?.title || selectedRole,
+            skills,
+            matchPercentage: matchPct,
+            missingSkills: data.skill_gaps?.map((s: { skill_name: string }) => s.skill_name) || [],
+            matchedSkills: data.met_skills?.map((s: { skill_name: string }) => s.skill_name) || [],
+          });
+
+          await saveUserAnalysis(user, {
+            targetRole: role?.title || selectedRole,
+            skills,
+            matchPercentage: matchPct,
+            missingSkills: data.skill_gaps?.map((s: { skill_name: string }) => s.skill_name) || [],
+            matchedSkills: data.met_skills?.map((s: { skill_name: string }) => s.skill_name) || [],
+          });
+          setSavedToCloud(true);
+        } catch (saveErr) {
+          console.error("Failed to save to cloud:", saveErr);
+          setSaveError(saveErr instanceof Error ? saveErr.message : "Failed to save to cloud");
+        }
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error occurred";
       setError(msg);
@@ -113,6 +155,25 @@ export default function SkillForm() {
           Back to Form
         </button>
         <AnalysisResults data={results} />
+        {savedToCloud && (
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-900/10 px-4 py-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span className="text-sm text-emerald-400">Your progress has been saved! You can resume anytime.</span>
+          </div>
+        )}
+        {saveError && (
+          <div className="flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-900/10 px-4 py-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span className="text-sm text-amber-400">Could not save to cloud: {saveError}</span>
+          </div>
+        )}
       </div>
     );
   }
@@ -294,6 +355,11 @@ export default function SkillForm() {
               ? "Select a target job role"
               : "Select at least 2 skills"}
           </p>
+        )}
+        {user && (
+          <span className="text-xs text-zinc-500">
+            ✓ Your progress will be saved
+          </span>
         )}
       </div>
     </div>

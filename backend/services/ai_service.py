@@ -1,5 +1,6 @@
 import json
 import os
+from typing import List
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -21,7 +22,7 @@ def _get_client() -> OpenAI:
     return OpenAI(base_url=NEBIUS_BASE_URL, api_key=NEBIUS_API_KEY)
 
 
-def generate_ai_roadmap(target_role: str, missing_skills: list[str]) -> dict:
+def generate_ai_roadmap(target_role: str, missing_skills: List[str]) -> dict:
     client = _get_client()
     # Re-read model at call time so .env changes are picked up on reload
     load_dotenv(override=True)

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Dict, List, Optional
 from fastapi import HTTPException
 
 from urllib.parse import quote_plus
@@ -21,6 +22,7 @@ from models.schemas import (
 )
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "jobs.json"
+YOUTUBE_LINKS_PATH = Path(__file__).resolve().parent.parent / "data" / "youtube_links.json"
 
 PROFICIENCY_LEVELS = {"beginner": 1, "intermediate": 2, "advanced": 3}
 
@@ -30,7 +32,15 @@ def _load_data() -> dict:
         return json.load(f)
 
 
-def get_all_job_roles() -> list[JobRole]:
+def _load_youtube_links() -> dict:
+    """Load YouTube links from the separate JSON file."""
+    if YOUTUBE_LINKS_PATH.exists():
+        with open(YOUTUBE_LINKS_PATH, "r") as f:
+            return json.load(f)
+    return {}
+
+
+def get_all_job_roles() -> List[JobRole]:
     data = _load_data()
     return [JobRole(**role) for role in data["job_roles"]]
 
@@ -40,17 +50,38 @@ def _normalize(s: str) -> str:
     return s.lower().strip().replace("-", " ").replace("_", " ")
 
 
+def _contains_words(normalized_input: str, normalized_title: str) -> bool:
+    """Check if all words in input are found in title (partial match)."""
+    input_words = set(normalized_input.split())
+    title_words = set(normalized_title.split())
+    # Check if key words match (developer/engineer are interchangeable)
+    mapped_input = {
+        w.replace("engineer", "developer").replace("programmer", "developer")
+        for w in input_words
+    }
+    mapped_title = {
+        w.replace("engineer", "developer").replace("programmer", "developer")
+        for w in title_words
+    }
+    return mapped_input.issubset(mapped_title) or normalized_input in normalized_title
+
+
 def get_job_role(role_id: str) -> JobRole:
     """Look up a job role by ID or by title (fuzzy: ignores case, hyphens, underscores)."""
     data = _load_data()
+    needle = _normalize(role_id)
+
     for role in data["job_roles"]:
+        # Direct ID match
         if role["id"] == role_id:
             return JobRole(**role)
-    # Fallback: try matching by title (normalized)
-    needle = _normalize(role_id)
-    for role in data["job_roles"]:
+        # Exact normalized title match
         if _normalize(role["title"]) == needle:
             return JobRole(**role)
+        # Partial/fuzzy match: "Frontend Engineer" matches "Frontend Developer"
+        if _contains_words(needle, _normalize(role["title"])):
+            return JobRole(**role)
+
     raise HTTPException(status_code=404, detail=f"Job role '{role_id}' not found")
 
 
@@ -59,8 +90,8 @@ def detect_skill_gaps(request: SkillGapDetectionRequest) -> SkillGapDetectionRes
     student_skills_lower = {s.lower() for s in request.student_skills}
     required_skill_names = [s.name for s in role.required_skills]
 
-    matched: list[str] = []
-    missing: list[str] = []
+    matched: List[str] = []
+    missing: List[str] = []
 
     for skill_name in required_skill_names:
         if skill_name.lower() in student_skills_lower:
@@ -80,12 +111,12 @@ def detect_skill_gaps(request: SkillGapDetectionRequest) -> SkillGapDetectionRes
 
 def analyze_skills(request: SkillAnalysisRequest) -> SkillAnalysisResponse:
     role = get_job_role(request.target_role_id)
-    user_skill_map: dict[str, str] = {
+    user_skill_map: Dict[str, str] = {
         s.name.lower(): s.proficiency for s in request.user_skills
     }
 
-    skill_gaps: list[SkillGap] = []
-    met_skills: list[SkillGap] = []
+    skill_gaps: List[SkillGap] = []
+    met_skills: List[SkillGap] = []
 
     for required in role.required_skills:
         req_name_lower = required.name.lower()
@@ -133,7 +164,7 @@ def analyze_skills(request: SkillAnalysisRequest) -> SkillAnalysisResponse:
 
 
 def generate_roadmap(
-    role_id: str, user_skills: list[Skill] | None = None
+    role_id: str, user_skills: Optional[List[Skill]] = None
 ) -> RoadmapResponse:
     if user_skills is None:
         user_skills = []
@@ -143,7 +174,7 @@ def generate_roadmap(
     data = _load_data()
     templates = data["roadmap_templates"]
 
-    skill_roadmaps: list[SkillRoadmap] = []
+    skill_roadmaps: List[SkillRoadmap] = []
     total_weeks = 0
 
     for gap in analysis.skill_gaps:
@@ -180,10 +211,10 @@ def generate_roadmap(
     )
 
 
-def get_youtube_resources(skills: list[str]) -> list[YouTubeSkillResource]:
-    data = _load_data()
-    yt_data = data.get("youtube_resources", {})
-    results: list[YouTubeSkillResource] = []
+def get_youtube_resources(skills: List[str]) -> List[YouTubeSkillResource]:
+    """Get YouTube resources from the separate youtube_links.json file."""
+    yt_data = _load_youtube_links()
+    results: List[YouTubeSkillResource] = []
 
     for skill in skills:
         resources_raw = yt_data.get(skill, [])
@@ -193,6 +224,7 @@ def get_youtube_resources(skills: list[str]) -> list[YouTubeSkillResource]:
                 for r in resources_raw
             ]
         else:
+            # Fallback to YouTube search if no links found
             search_url = f"https://www.youtube.com/results?search_query={quote_plus(skill + ' tutorial')}"
             links = [
                 YouTubeLink(title=f"Search: {skill} tutorial", url=search_url)
@@ -209,7 +241,7 @@ def get_youtube_resources(skills: list[str]) -> list[YouTubeSkillResource]:
 # AI-powered roadmap is available via GET /roadmap.
 
 def get_dashboard(
-    student_skills: list[str], target_role: str
+    student_skills: List[str], target_role: str
 ) -> DashboardResponse:
     # Step 1: Detect skill gaps
     gap_request = SkillGapDetectionRequest(
@@ -225,7 +257,7 @@ def get_dashboard(
     # Map required skills to their proficiency levels
     required_map = {s.name: s.proficiency for s in role.required_skills}
 
-    roadmap_summary: list[str] = []
+    roadmap_summary: List[str] = []
     for skill in gap_result.missing_skills:
         level = required_map.get(skill, "intermediate")
         duration = templates.get(level, templates["intermediate"])["duration_weeks"]

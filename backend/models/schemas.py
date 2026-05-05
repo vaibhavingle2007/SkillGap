@@ -1,3 +1,4 @@
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
@@ -12,30 +13,30 @@ class JobRole(BaseModel):
     id: str
     title: str
     description: str
-    required_skills: list[Skill]
+    required_skills: List[Skill]
 
 
 class SkillAnalysisRequest(BaseModel):
-    user_skills: list[Skill]
+    user_skills: List[Skill]
     target_role_id: str
 
 
 class SkillGap(BaseModel):
     skill_name: str
     required_proficiency: str
-    current_proficiency: str | None = None
+    current_proficiency: Optional[str] = None
     gap_level: str  # "missing", "needs_improvement", "met"
 
 
 class SkillAnalysisResponse(BaseModel):
     target_role: str
     match_percentage: float
-    skill_gaps: list[SkillGap]
-    met_skills: list[SkillGap]
+    skill_gaps: List[SkillGap]
+    met_skills: List[SkillGap]
 
 
 class SkillGapDetectionRequest(BaseModel):
-    student_skills: list[str]
+    student_skills: List[str]
     target_role: str
 
 
@@ -46,19 +47,19 @@ class FrontendSkillInput(BaseModel):
 
 class FrontendAnalysisRequest(BaseModel):
     """Accepts the payload format sent by the Next.js frontend."""
-    skills: list[FrontendSkillInput]
+    skills: List[FrontendSkillInput]
     target_role: str
 
 
 class SkillGapDetectionResponse(BaseModel):
-    missing_skills: list[str]
-    matched_skills: list[str]
+    missing_skills: List[str]
+    matched_skills: List[str]
     skill_gap_score: float
 
 
 class LearningRoadmapRequest(BaseModel):
     """Accepts the payload format sent by the frontend for roadmap generation."""
-    skills: list[FrontendSkillInput] = []
+    skills: List[FrontendSkillInput] = []
     target_role: str
 
 
@@ -69,40 +70,40 @@ class RoadmapStep(BaseModel):
 
 class SkillRoadmap(BaseModel):
     skill_name: str
-    current_level: str | None
+    current_level: Optional[str]
     target_level: str
     duration_weeks: int
-    steps: list[RoadmapStep]
+    steps: List[RoadmapStep]
 
 
 class RoadmapResponse(BaseModel):
     target_role: str
     total_duration_weeks: int
-    skill_roadmaps: list[SkillRoadmap]
+    skill_roadmaps: List[SkillRoadmap]
 
 
 class AIYoutubeVideo(BaseModel):
     title: str
     video_id: str
-    thumbnail: str | None = None
+    thumbnail: Optional[str] = None
 
 
 class AIRoadmapSkill(BaseModel):
     skill: str
-    learning_steps: list[str]
+    learning_steps: List[str]
     estimated_time: str
-    youtube_videos: list[AIYoutubeVideo] = []
+    youtube_videos: List[AIYoutubeVideo] = []
 
 
 class AIRoadmapResponse(BaseModel):
-    roadmap: list[AIRoadmapSkill]
+    roadmap: List[AIRoadmapSkill]
 
 
 class DashboardResponse(BaseModel):
     skill_gap_score: float
-    matched_skills: list[str]
-    missing_skills: list[str]
-    roadmap_summary: list[str]
+    matched_skills: List[str]
+    missing_skills: List[str]
+    roadmap_summary: List[str]
 
 
 class YouTubeLink(BaseModel):
@@ -112,4 +113,4 @@ class YouTubeLink(BaseModel):
 
 class YouTubeSkillResource(BaseModel):
     skill: str
-    youtube_links: list[YouTubeLink]
+    youtube_links: List[YouTubeLink]

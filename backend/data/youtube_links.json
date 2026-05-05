@@ -1,0 +1,368 @@
+{
+  "HTML": [
+    {
+      "title": "HTML Full Course - Build a Website",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=u0moYQdKJzI"
+    },
+    {
+      "title": "HTML Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=UB1O30fR-EE"
+    },
+    {
+      "title": "Learn HTML in 1 Hour",
+      "channel": "Mosh",
+      "url": "https://youtube.com/watch?v=UB1O30fR-EE"
+    }
+  ],
+  "CSS": [
+    {
+      "title": "CSS Full Course for Beginners",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=yTO5GrwEi5w"
+    },
+    {
+      "title": "CSS Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=yTSk2IXXm_s"
+    },
+    {
+      "title": "CSS Tutorial",
+      "channel": "Mosh",
+      "url": "https://youtube.com/watch?v=yTSk2IXXm_s"
+    }
+  ],
+  "JavaScript": [
+    {
+      "title": "JavaScript Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=PkZNo7MFNFg"
+    },
+    {
+      "title": "JavaScript Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=hdI2bqOjy3c"
+    },
+    {
+      "title": "JavaScript Tutorial",
+      "channel": "Mosh",
+      "url": "https://youtube.com/watch?v=W6NZfCO5SIk"
+    }
+  ],
+  "Python": [
+    {
+      "title": "Python Full Course",
+      "channel": "CodeWithHarry",
+      "url": "https://youtu.be/7wnove7K-ZQ?si=D8ze44mehY-tq4Zp"
+    },
+    {
+      "title": "Python Tutorial",
+      "channel": "Mosh",
+      "url": "https://youtube.com/watch?v=kqtD5dpn9C8"
+    },
+    {
+      "title": "Python Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=rfscVS0vtbw"
+    }
+  ],
+  "React": [
+    {
+      "title": "React Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=0W6K3RQA2k8"
+    },
+    {
+      "title": "React JS Tutorial",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=Ke90Tje7VS0"
+    },
+    {
+      "title": "React Tutorial",
+      "channel": "Mosh",
+      "url": "https://youtube.com/watch?v=Ke90Tje7VS0"
+    }
+  ],
+  "TypeScript": [
+    {
+      "title": "TypeScript Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=30LWjhZzg50"
+    },
+    {
+      "title": "TypeScript Tutorial",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=BwuLxPH8wK8"
+    }
+  ],
+  "SQL": [
+    {
+      "title": "SQL Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=HXV3zeQKqGY"
+    },
+    {
+      "title": "SQL Tutorial",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=kbKpeEg89j4"
+    }
+  ],
+  "Git": [
+    {
+      "title": "Git and GitHub Tutorial",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=SWYqp7nYf-U"
+    },
+    {
+      "title": "Git Tutorial",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=IH-1EG6R2yA"
+    }
+  ],
+  "Docker": [
+    {
+      "title": "Docker Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=fqMOX6JJhGo"
+    },
+    {
+      "title": "Docker Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=h9QgnTL6Q6U"
+    },
+    {
+      "title": "Docker Tutorial",
+      "channel": "Nana",
+      "url": "https://youtube.com/watch?v=zJ6Wb5ZCBq8"
+    }
+  ],
+  "REST APIs": [
+    {
+      "title": "REST API Tutorial",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=qb6p2O1b1BA"
+    },
+    {
+      "title": "Build REST API",
+      "channel": "Tech With Tim",
+      "url": "https://youtube.com/watch?v=4GqXIaX-Ni4"
+    }
+  ],
+  "Machine Learning": [
+    {
+      "title": "Machine Learning Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=GwIo3gG2B2A"
+    },
+    {
+      "title": "ML Tutorial",
+      "channel": "StatQuest",
+      "url": "https://youtube.com/watch?v=GVp2r9k1jDs"
+    }
+  ],
+  "Deep Learning": [
+    {
+      "title": "Deep Learning Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=VeoJ3xu4wac"
+    },
+    {
+      "title": "Neural Networks",
+      "channel": "3Blue1Brown",
+      "url": "https://youtube.com/watch?v=airbD64yoBM"
+    }
+  ],
+  "Kubernetes": [
+    {
+      "title": "Kubernetes Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=dHw5cIXVwng"
+    },
+    {
+      "title": "Kubernetes Tutorial",
+      "channel": "Nana",
+      "url": "https://youtube.com/watch?v=X48VuDVv0do"
+    }
+  ],
+  "AWS": [
+    {
+      "title": "AWS Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=SOTD3KUBf0Q"
+    },
+    {
+      "title": "AWS Tutorial",
+      "channel": "Nana",
+      "url": "https://youtube.com/watch?v=7m_q2R-KHQk"
+    }
+  ],
+  "FastAPI": [
+    {
+      "title": "FastAPI Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=tLGl5L6G4g8"
+    },
+    {
+      "title": "FastAPI Tutorial",
+      "channel": "Tech With Tim",
+      "url": "https://youtube.com/watch?v=2G_m7guG3EE"
+    }
+  ],
+  "Node.js": [
+    {
+      "title": "Node.js Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=Oe421EPjeBY"
+    },
+    {
+      "title": "Node.js Crash Course",
+      "channel": "Traversy Media",
+      "url": "https://youtube.com/watch?v=fBNz5xF-KxU"
+    }
+  ],
+  "Responsive Design": [
+    {
+      "title": "Responsive Web Design",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=sfdL7pt5z4c"
+    },
+    {
+      "title": "CSS Responsive",
+      "channel": "Kevin Powell",
+      "url": "https://youtube.com/watch?v=2M3dNMWMTjM"
+    }
+  ],
+  "PostgreSQL": [
+    {
+      "title": "PostgreSQL Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=qw--VYLpxG4"
+    },
+    {
+      "title": "PostgreSQL Tutorial",
+      "channel": "Amigoscode",
+      "url": "https://youtube.com/watch?v=ClpRte6c2Dw"
+    }
+  ],
+  "Linux": [
+    {
+      "title": "Linux Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=sLoKPDVAyqo"
+    },
+    {
+      "title": "Linux Command Line",
+      "channel": "NetworkChuck",
+      "url": "https://youtube.com/watch?v=dyGOUtC9gPQ"
+    }
+  ],
+  "Pandas": [
+    {
+      "title": "Pandas Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=vmEHCJ-6xLs"
+    },
+    {
+      "title": "Pandas Tutorial",
+      "channel": "Corey Schafer",
+      "url": "https://youtube.com/watch?v=ZyK8G52r2kU"
+    }
+  ],
+  "NumPy": [
+    {
+      "title": "NumPy Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=QTO2duXaE5c"
+    },
+    {
+      "title": "NumPy Tutorial",
+      "channel": "Keith Galli",
+      "url": "https://youtube.com/watch?v=Qn9sBrKYXNo"
+    }
+  ],
+  "Statistics": [
+    {
+      "title": "Statistics Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=MsAU2xV-XtQ"
+    },
+    {
+      "title": "Statistics Tutorial",
+      "channel": "StatQuest",
+      "url": "https://youtube.com/watch?v=GVp2r9k1jDs"
+    }
+  ],
+  "Data Visualization": [
+    {
+      "title": "Data Visualization Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=4DUDpRB8jB4"
+    },
+    {
+      "title": "Matplotlib Tutorial",
+      "channel": "Corey Schafer",
+      "url": "https://youtube.com/watch?v=qqD-0yk9qZo"
+    }
+  ],
+  "Scikit-learn": [
+    {
+      "title": "Scikit-Learn Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=pqNJKq5c-M4"
+    },
+    {
+      "title": "Scikit-Learn Tutorial",
+      "channel": "Data School",
+      "url": "https://youtube.com/watch?v=C9UWBZ5DbhU"
+    }
+  ],
+  "CI/CD": [
+    {
+      "title": "CI/CD Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=6P25D8cJQ0U"
+    },
+    {
+      "title": "GitHub Actions",
+      "channel": "Nana",
+      "url": "https://youtube.com/watch?v=RTx8mFCd23M"
+    }
+  ],
+  "Terraform": [
+    {
+      "title": "Terraform Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=7xngnjfOhK4"
+    },
+    {
+      "title": "Terraform Tutorial",
+      "channel": "Nana",
+      "url": "https://youtube.com/watch?v=tB9R82N-U0w"
+    }
+  ],
+  "TensorFlow": [
+    {
+      "title": "TensorFlow Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=zQhGMEq4U2k"
+    },
+    {
+      "title": "TensorFlow Tutorial",
+      "channel": "TensorFlow",
+      "url": "https://youtube.com/watch?v=oM-Y2M6S8E4"
+    }
+  ],
+  "MLOps": [
+    {
+      "title": "MLOps Full Course",
+      "channel": "freeCodeCamp",
+      "url": "https://youtube.com/watch?v=6_XckVQanyI"
+    },
+    {
+      "title": "MLOps Tutorial",
+      "channel": "DataTalks.Club",
+      "url": "https://youtube.com/watch?v=3ciec_3ckI8"
+    }
+  ]
+}

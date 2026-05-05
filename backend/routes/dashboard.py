@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Query
 
 from models.schemas import DashboardResponse
@@ -13,7 +14,7 @@ router = APIRouter()
 @router.get("/dashboard", response_model=DashboardResponse)
 def dashboard(
     target_role: str = Query(..., description="Target job role ID"),
-    student_skills: list[str] = Query(
+    student_skills: List[str] = Query(
         ..., description="Student's current skill names"
     ),
 ):

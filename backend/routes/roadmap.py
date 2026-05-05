@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Query
 
 from models.schemas import (
@@ -15,7 +16,7 @@ router = APIRouter()
 @router.get("/roadmap", response_model=AIRoadmapResponse)
 def get_roadmap(
     target_role: str = Query(..., description="Target job role (e.g., 'Backend Developer')"),
-    missing_skills: list[str] = Query(..., description="Skills the student is missing"),
+    missing_skills: List[str] = Query(..., description="Skills the student is missing"),
 ):
     """Generate an AI-powered learning roadmap for missing skills using Nebius API."""
     result = generate_ai_roadmap(target_role, missing_skills)
