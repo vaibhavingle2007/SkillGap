@@ -9,11 +9,14 @@ venv/
 .env
 .env.local
 .env*.local
+*.Zone.Identifier
 
 # Build outputs
 .next/
 dist/
 build/
+out/
+tsconfig.tsbuildinfo
 
 # IDE
 .vscode/
@@ -25,3 +28,10 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Tooling
+.claude/
+.openclaude/
+.agents/
+CLAUDE.md
+skills-lock.json
