@@ -3,53 +3,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import {
+  LayoutDashboard,
+  FileText,
+  Map,
+  BookOpen,
+  LogOut,
+} from "lucide-react";
 
 const navItems = [
   {
-    label: "Home",
-    href: "/",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    ),
-  },
-  {
-    label: "Skill Input",
-    href: "/skill-input",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-  },
-  {
     label: "Dashboard",
     href: "/dashboard",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
-      </svg>
-    ),
+    icon: LayoutDashboard,
   },
   {
-    label: "Roadmap",
+    label: "Skill Profile",
+    href: "/skill-input",
+    icon: FileText,
+  },
+  {
+    label: "Learning Roadmap",
     href: "/roadmap",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="8" y1="6" x2="21" y2="6" />
-        <line x1="8" y1="12" x2="21" y2="12" />
-        <line x1="8" y1="18" x2="21" y2="18" />
-        <line x1="3" y1="6" x2="3.01" y2="6" />
-        <line x1="3" y1="12" x2="3.01" y2="12" />
-        <line x1="3" y1="18" x2="3.01" y2="18" />
-      </svg>
-    ),
+    icon: Map,
   },
 ];
 
@@ -67,42 +43,44 @@ export default function Sidebar() {
     : user?.email?.slice(0, 2).toUpperCase() || "??";
 
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-zinc-800/60 bg-zinc-950/80 backdrop-blur-xl">
-      {/* Brand */}
-      <div className="flex items-center gap-3 border-b border-zinc-800/60 px-6 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600/20">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-zinc-800 bg-zinc-900/80 backdrop-blur-xl lg:flex">
+      {/* Brand Section */}
+      <div className="flex items-center gap-4 px-6 py-8">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-emerald-500 shadow-lg shadow-indigo-500/20">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
         </div>
         <div>
-          <h1 className="text-sm font-bold tracking-tight text-white">SkillForge</h1>
-          <p className="text-[11px] text-zinc-500">AI Career Analyzer</p>
+          <h1 className="text-lg font-bold tracking-tighter text-white">SkillGap.AI</h1>
+          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Career Intelligence</p>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        <ul className="space-y-1">
+      {/* Main Navigation */}
+      <nav className="flex-1 px-4 py-6">
+        <ul className="space-y-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const Icon = item.icon;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-teal-600/15 text-teal-400 shadow-sm shadow-teal-900/20"
-                        : "text-zinc-400 hover:bg-zinc-800/60 hover:text-zinc-200"
-                    }`}
+                  className={`group relative flex items-center gap-4 rounded-2xl px-4 py-3.5 text-sm font-bold transition-all duration-300 ${
+                    isActive
+                      ? "bg-white/5 text-white shadow-sm ring-1 ring-white/10"
+                      : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
+                  }`}
                 >
-                  <span className={isActive ? "text-teal-400" : "text-zinc-500"}>
-                    {item.icon}
-                  </span>
+                  <Icon
+                    className={`h-5 w-5 transition-colors duration-300 ${
+                      isActive ? "text-indigo-400" : "text-zinc-600 group-hover:text-zinc-400"
+                    }`}
+                  />
                   {item.label}
                   {isActive && (
-                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-teal-400" />
+                    <div className="absolute right-4 h-1.5 w-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
                   )}
                 </Link>
               </li>
@@ -111,30 +89,32 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-zinc-800/60 px-4 py-4">
-        <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-xs font-bold text-white">
-            {initials}
+      {/* User & Footer */}
+      <div className="mt-auto p-4">
+        <div className="rounded-[2rem] bg-zinc-900/40 border border-zinc-800/50 p-4">
+          <div className="flex items-center gap-3">
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/20 to-emerald-500/20 border border-zinc-700">
+              <div className="flex h-full w-full items-center justify-center text-xs font-bold text-white">
+                {initials}
+              </div>
+              <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-zinc-900 bg-emerald-500" />
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="truncate text-xs font-bold text-white">
+                {user?.displayName || "Explorer"}
+              </p>
+              <p className="truncate text-[10px] font-bold uppercase text-zinc-500">
+                {user?.email?.split("@")[0] || "Guest"}
+              </p>
+            </div>
           </div>
-          <div className="flex-1 overflow-hidden">
-            <p className="truncate text-sm font-medium text-zinc-200">
-              {user?.displayName || "User"}
-            </p>
-            <p className="truncate text-xs text-zinc-500">
-              {user?.email || ""}
-            </p>
-          </div>
+
           <button
             onClick={() => signOut()}
-            className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-300"
-            title="Sign out"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-zinc-500 transition-all hover:bg-red-500/10 hover:text-red-400 active:scale-95"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
+            <LogOut className="h-3.5 w-3.5" />
+            Sign Out
           </button>
         </div>
       </div>

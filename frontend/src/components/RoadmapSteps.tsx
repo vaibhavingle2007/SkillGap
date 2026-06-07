@@ -1,7 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { roadmapSteps } from "@/data/mockData";
+interface YTResource {
+  id: string;
+  title: string;
+  channel: string;
+  duration: string;
+  views: string;
+  url: string;
+}
+
+interface RoadmapStepType {
+  id: string;
+  title: string;
+  status: "completed" | "in-progress" | "upcoming";
+  difficulty: string;
+  estimatedWeeks: number;
+  progress: number;
+  description: string;
+  skills: string[];
+  youtubeResources: YTResource[];
+}
+
+interface RealRoadmapItem {
+  skill: string;
+  learning_steps: (string | { step: string; description?: string })[];
+  estimated_time: string;
+  resources?: { title: string; url: string }[];
+  youtube_videos?: { title: string; video_id: string }[];
+}
 
 const statusConfig = {
   completed: {
@@ -24,21 +51,66 @@ const statusConfig = {
   },
 };
 
-const difficultyColors = {
+const difficultyColors: Record<string, string> = {
   Beginner: "text-emerald-400 bg-emerald-900/30",
   Intermediate: "text-amber-400 bg-amber-900/30",
   Advanced: "text-red-400 bg-red-900/30",
 };
 
-export default function RoadmapSteps() {
-  const [expandedStep, setExpandedStep] = useState<string | null>("step-2");
+function parseWeeks(estimated: string): number {
+  const m = estimated.match(/(\d+)/);
+  return m ? parseInt(m[1]) : 4;
+}
+
+function formatSteps(steps: RealRoadmapItem["learning_steps"]): string[] {
+  return steps.map((s, i) => {
+    if (typeof s === "string") return s;
+    return s.step || `Step ${i + 1}`;
+  });
+}
+
+function buildMockFromReal(roadmap: RealRoadmapItem[]): RoadmapStepType[] {
+  return roadmap.map((item, idx) => {
+    const steps = formatSteps(item.learning_steps);
+    const weeks = parseWeeks(item.estimated_time);
+    const ytRes: YTResource[] =
+      item.youtube_videos?.map((v) => ({
+        id: v.video_id,
+        title: v.title,
+        channel: "YouTube",
+        duration: "~10 min",
+        views: "10K",
+        url: `https://www.youtube.com/watch?v=${v.video_id}`,
+      })) ?? [];
+    return {
+      id: `step-${idx}`,
+      title: item.skill,
+      status: idx === 0 ? ("in-progress" as const) : ("upcoming" as const),
+      difficulty: idx === 0 ? "Beginner" : "Intermediate",
+      estimatedWeeks: weeks,
+      progress: 0,
+      description: steps.join(" → "),
+      skills: steps.slice(0, 4),
+      youtubeResources: ytRes,
+    };
+  });
+}
+
+export default function RoadmapSteps({
+  roadmap,
+}: {
+  roadmap?: RealRoadmapItem[];
+}) {
+  const [expandedStep, setExpandedStep] = useState<string | null>("step-0");
+
+  const displaySteps = roadmap && roadmap.length > 0 ? buildMockFromReal(roadmap) : [];
 
   return (
     <div className="relative space-y-0">
-      {roadmapSteps.map((step, idx) => {
+      {displaySteps.map((step, idx) => {
         const config = statusConfig[step.status];
         const isExpanded = expandedStep === step.id;
-        const isLast = idx === roadmapSteps.length - 1;
+        const isLast = idx === displaySteps.length - 1;
 
         return (
           <div key={step.id} className={`animate-fade-in-up stagger-${idx + 1} relative flex gap-4`}>
@@ -68,7 +140,7 @@ export default function RoadmapSteps() {
                   <span className={`rounded-md px-2 py-0.5 text-[10px] font-semibold ${config.badge}`}>
                     {config.label}
                   </span>
-                  <span className={`rounded-md px-2 py-0.5 text-[10px] font-medium ${difficultyColors[step.difficulty]}`}>
+                  <span className={`rounded-md px-2 py-0.5 text-[10px] font-medium ${difficultyColors[step.difficulty] || difficultyColors.Beginner}`}>
                     {step.difficulty}
                   </span>
                   <span className="ml-auto text-xs text-zinc-500">

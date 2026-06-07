@@ -1,3 +1,9 @@
+"""
+Legacy AI roadmap generation via Nebius API.
+Replaced by static roadmaps in backend/data/roadmaps.json via skill_service.get_static_roadmap().
+Kept for optional premium mode if dynamic AI-generated content is needed in the future.
+"""
+
 import json
 import os
 from typing import List

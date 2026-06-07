@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Query
 
 from models.schemas import (
@@ -7,8 +7,7 @@ from models.schemas import (
     LearningRoadmapRequest,
     SkillGapDetectionRequest,
 )
-from services.ai_service import generate_ai_roadmap
-from services.skill_service import detect_skill_gaps, get_youtube_resources
+from services.skill_service import detect_skill_gaps, get_static_roadmap, get_youtube_resources
 
 router = APIRouter()
 
@@ -16,10 +15,10 @@ router = APIRouter()
 @router.get("/roadmap", response_model=AIRoadmapResponse)
 def get_roadmap(
     target_role: str = Query(..., description="Target job role (e.g., 'Backend Developer')"),
-    missing_skills: List[str] = Query(..., description="Skills the student is missing"),
+    missing_skills: Optional[List[str]] = Query(None, description="Skills the student is missing"),
 ):
-    """Generate an AI-powered learning roadmap for missing skills using Nebius API."""
-    result = generate_ai_roadmap(target_role, missing_skills)
+    """Generate a static learning roadmap from curated skill roadmaps."""
+    result = get_static_roadmap(missing_skills)
     return result
 
 
@@ -60,7 +59,7 @@ def _attach_youtube_videos(result: dict) -> dict:
 
 @router.post("/learning-roadmap", response_model=AIRoadmapResponse)
 def post_learning_roadmap(request: LearningRoadmapRequest):
-    """Generate an AI-powered learning roadmap.
+    """Generate a static learning roadmap from curated skill templates.
 
     Accepts the frontend format: {skills: [{name, level}], target_role}.
     First detects missing skills, then generates a roadmap for them.
@@ -74,6 +73,6 @@ def post_learning_roadmap(request: LearningRoadmapRequest):
     if not gap_result.missing_skills:
         return AIRoadmapResponse(roadmap=[])
 
-    result = generate_ai_roadmap(request.target_role, gap_result.missing_skills)
+    result = get_static_roadmap(gap_result.missing_skills)
     result = _attach_youtube_videos(result)
     return result

@@ -10,15 +10,18 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const isLoginPage = pathname === "/login";
+  const isLandingPage = pathname === "/";
 
   useEffect(() => {
-    if (!loading && !user && !isLoginPage) {
+    // Redirect to login if not authenticated and trying to access a protected page
+    if (!loading && !user && !isLoginPage && !isLandingPage) {
       router.replace("/login");
     }
+    // Redirect away from login if already authenticated
     if (!loading && user && isLoginPage) {
-      router.replace("/");
+      router.replace("/dashboard");
     }
-  }, [user, loading, isLoginPage, router]);
+  }, [user, loading, isLoginPage, isLandingPage, router]);
 
   // Show loading spinner while auth state is resolving
   if (loading) {
@@ -26,15 +29,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen items-center justify-center bg-[#09090b]">
         <div className="flex flex-col items-center gap-4">
           <div className="h-10 w-10 animate-spin rounded-full border-3 border-zinc-700 border-t-teal-500" />
-          <p className="text-sm text-zinc-500">Loading...</p>
+          <p className="text-sm text-zinc-500 font-bold uppercase tracking-widest">Resolving Session...</p>
         </div>
       </div>
     );
   }
 
-  // Login page - no sidebar
-  if (isLoginPage) {
-    if (user) return null; // will redirect
+  // Public pages (Login, Landing) - no sidebar
+  if (isLoginPage || isLandingPage) {
     return <>{children}</>;
   }
 
@@ -44,7 +46,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Sidebar />
-      <main className="ml-64 min-h-screen">{children}</main>
+      <main className="ml-64 min-h-screen bg-[#09090b]">{children}</main>
     </>
   );
 }

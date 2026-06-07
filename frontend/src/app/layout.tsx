@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { DataProvider } from "@/context/DataContext";
 import AuthGuard from "@/components/AuthGuard";
 
 const inter = Inter({
@@ -24,7 +25,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased`}>
         <AuthProvider>
-          <AuthGuard>{children}</AuthGuard>
+          <DataProvider>
+            <AuthGuard>{children}</AuthGuard>
+          </DataProvider>
         </AuthProvider>
       </body>
     </html>

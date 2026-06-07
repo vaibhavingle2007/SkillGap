@@ -1,7 +1,5 @@
 "use client";
 
-import { skillGaps } from "@/data/mockData";
-
 const priorityConfig = {
   Critical: { color: "text-red-400", bg: "bg-red-900/30", bar: "from-red-500 to-red-400" },
   High: { color: "text-amber-400", bg: "bg-amber-900/30", bar: "from-amber-500 to-amber-400" },
@@ -9,11 +7,55 @@ const priorityConfig = {
   Low: { color: "text-zinc-400", bg: "bg-zinc-700/30", bar: "from-zinc-500 to-zinc-400" },
 };
 
-export default function SkillGapCards() {
+interface AnalysisSkill {
+  skill_name: string;
+  required_proficiency: string;
+  current_proficiency: string | null;
+  gap_level: "missing" | "needs_improvement" | "met";
+}
+
+interface AnalysisData {
+  skill_gaps: AnalysisSkill[];
+  met_skills?: AnalysisSkill[];
+}
+
+export default function SkillGapCards({ data }: { data?: AnalysisData }) {
+  // Map real data to view model
+  const gaps = data?.skill_gaps.length
+    ? data.skill_gaps.map((s) => {
+        const proficiencyToNum: Record<string, number> = {
+          beginner: 33,
+          intermediate: 66,
+          advanced: 100,
+        };
+        const priority =
+          s.gap_level === "missing" ? "High" : "Critical";
+        const current = s.current_proficiency
+          ? proficiencyToNum[s.current_proficiency.toLowerCase()] || 0
+          : 0;
+        const required = proficiencyToNum[s.required_proficiency.toLowerCase()] || 100;
+        return {
+          skill: s.skill_name,
+          current,
+          required,
+          gap: required - current,
+          priority,
+        };
+      })
+    : [];
+
+  if (!gaps.length) {
+    return (
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-6 text-sm text-zinc-400">
+        No skill gaps detected.
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      {skillGaps.map((gap, i) => {
-        const config = priorityConfig[gap.priority];
+      {gaps.map((gap, i) => {
+        const config = priorityConfig[gap.priority as "Critical" | "High" | "Medium" | "Low"];
         const gapPercent = Math.round((gap.gap / gap.required) * 100);
 
         return (

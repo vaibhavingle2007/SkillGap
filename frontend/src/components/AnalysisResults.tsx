@@ -1,231 +1,285 @@
 "use client";
 
-export interface AnalysisResponse {
-  matched_skills: string[];
-  missing_skills: string[];
-  skill_gap_score: number;
-  target_role?: string;
+import { useState, useEffect } from "react";
+
+export interface SkillGap {
+  skill_name: string;
+  required_proficiency: string;
+  current_proficiency: string | null;
+  gap_level: "missing" | "needs_improvement" | "met";
 }
 
-function GapScoreGauge({ score }: { score: number }) {
-  const radius = 58;
+export interface AnalysisResponse {
+  target_role: string;
+  match_percentage: number;
+  skill_gaps: SkillGap[];
+  met_skills: SkillGap[];
+  skill_gap_score?: number;
+}
+
+// Radar chart data points
+const skillCategories = [
+  "Frontend",
+  "Backend",
+  "DevOps",
+  "Data",
+  "System Design",
+  " Soft Skills",
+];
+
+function generateRadarData(current: number[], required: number[]) {
+  return skillCategories.map((skill, i) => ({
+    skill,
+    current: current[i] || 0,
+    required: required[i] || 0,
+  }));
+}
+
+function RadarChart({
+  current,
+  required,
+}: {
+  current: number[];
+  required: number[];
+}) {
+  const data = generateRadarData(current, required);
+  const maxValue = 100;
+
+  // Calculate points for polygon
+  const angleStep = (2 * Math.PI) / skillCategories.length;
+  const radius = 120;
+
+  const getPoints = (values: number[]) => {
+    return values
+      .map((v, i) => {
+        const angle = i * angleStep - Math.PI / 2;
+        const r = (v / maxValue) * radius;
+        const x = 160 + r * Math.cos(angle);
+        const y = 160 + r * Math.sin(angle);
+        return `${x},${y}`;
+      })
+      .join(" ");
+  };
+
+  const currentPoints = getPoints(current);
+  const requiredPoints = getPoints(required);
+
+  // Grid lines
+  const gridLevels = [25, 50, 75, 100];
+
+  return (
+    <div className="relative w-full max-w-[360px] mx-auto">
+      <svg viewBox="0 0 320 320" className="w-full h-auto">
+        {/* Grid circles */}
+        {gridLevels.map((level) => (
+          <circle
+            key={level}
+            cx="160"
+            cy="160"
+            r={(level / maxValue) * radius}
+            fill="none"
+            stroke="#3f3f46"
+            strokeWidth="1"
+            strokeDasharray={level === 100 ? "none" : "4 4"}
+            opacity={0.5}
+          />
+        ))}
+
+        {/* Axis lines */}
+        {skillCategories.map((_, i) => {
+          const angle = i * angleStep - Math.PI / 2;
+          const x = 160 + radius * Math.cos(angle);
+          const y = 160 + radius * Math.sin(angle);
+          return (
+            <line
+              key={i}
+              x1="160"
+              y1="160"
+              x2={x}
+              y2={y}
+              stroke="#3f3f46"
+              strokeWidth="1"
+              opacity={0.5}
+            />
+          );
+        })}
+
+        {/* Required skills polygon */}
+        <polygon
+          points={requiredPoints}
+          fill="rgba(99, 102, 241, 0.2)"
+          stroke="#6366f1"
+          strokeWidth="2"
+        />
+
+        {/* Current skills polygon */}
+        <polygon
+          points={currentPoints}
+          fill="rgba(16, 185, 129, 0.2)"
+          stroke="#10b981"
+          strokeWidth="2"
+        />
+
+        {/* Skill labels */}
+        {skillCategories.map((skill, i) => {
+          const angle = i * angleStep - Math.PI / 2;
+          const labelRadius = radius + 25;
+          const x = 160 + labelRadius * Math.cos(angle);
+          const y = 160 + labelRadius * Math.sin(angle);
+
+          return (
+            <text
+              key={skill}
+              x={x}
+              y={y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="fill-zinc-400 text-[10px] font-bold uppercase tracking-wider"
+            >
+              {skill}
+            </text>
+          );
+        })}
+      </svg>
+
+      {/* Legend */}
+      <div className="flex justify-center gap-6 mt-4">
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-emerald-500/50 border border-emerald-500" />
+          <span className="text-xs font-medium text-zinc-400">Current Skills</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-3 w-3 rounded-sm bg-indigo-500/50 border border-indigo-500" />
+          <span className="text-xs font-medium text-zinc-400">Required</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Match Gauge ─── */
+function MatchGauge({ score }: { score: number }) {
+  const radius = 50;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
 
   const getColor = (s: number) => {
-    if (s >= 80) return { from: "#10b981", to: "#34d399", label: "Excellent", ring: "ring-emerald-500/20" };
-    if (s >= 60) return { from: "#0d9488", to: "#14b8a6", label: "Good", ring: "ring-teal-500/20" };
-    if (s >= 40) return { from: "#f59e0b", to: "#fbbf24", label: "Needs Work", ring: "ring-amber-500/20" };
-    return { from: "#ef4444", to: "#f87171", label: "Critical", ring: "ring-red-500/20" };
+    if (s >= 80) return "#10b981";
+    if (s >= 60) return "#6366f1";
+    if (s >= 40) return "#f59e0b";
+    return "#ef4444";
   };
 
   const color = getColor(score);
-  const gradientId = "gapGaugeGrad";
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative h-36 w-36">
-        <svg className="circular-progress h-full w-full" viewBox="0 0 128 128">
-          <circle cx="64" cy="64" r={radius} fill="none" stroke="#27272a" strokeWidth="7" />
-          <circle
-            cx="64"
-            cy="64"
-            r={radius}
-            fill="none"
-            stroke={`url(#${gradientId})`}
-            strokeWidth="7"
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)" }}
-          />
-          <defs>
-            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={color.from} />
-              <stop offset="100%" stopColor={color.to} />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-white">{score}%</span>
-          <span className="text-[10px] font-medium text-zinc-500">Gap Score</span>
-        </div>
+    <div className="relative h-36 w-36">
+      <div className="absolute inset-0 rounded-full opacity-30 blur-xl" style={{ background: `radial-gradient(circle, ${color}40 0%, transparent 70%)` }} />
+      <svg className="h-full w-full -rotate-90" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r={radius} fill="none" stroke="#27272a" strokeWidth="8" />
+        <circle
+          cx="60"
+          cy="60"
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth="8"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-1500 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-3xl font-black text-white">{Math.round(score)}%</span>
+        <span className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Match</span>
       </div>
-      <span className={`mt-2 rounded-full px-3 py-1 text-xs font-semibold ring-2 ${color.ring}`}
-        style={{ color: color.from }}
-      >
-        {color.label}
-      </span>
     </div>
   );
 }
 
 export default function AnalysisResults({ data }: { data: AnalysisResponse }) {
-  const totalSkills = data.matched_skills.length + data.missing_skills.length;
-  const matchPercent = totalSkills > 0 ? Math.round((data.matched_skills.length / totalSkills) * 100) : 0;
+  const matchPct = data.match_percentage ?? data.skill_gap_score ?? 0;
+  const gapCount = data.skill_gaps?.length || 0;
+  const metCount = data.met_skills?.length || 0;
+
+  // Generate mock radar data
+  const currentData = [
+    metCount * 15,
+    (metCount % 3) * 20 + 30,
+    25,
+    20,
+    15,
+    30,
+  ];
+  const requiredData = [
+    metCount * 15 + gapCount * 10,
+    (metCount % 3) * 20 + gapCount * 15,
+    50,
+    45,
+    40,
+    50,
+  ];
 
   return (
-    <div className="animate-fade-in-up space-y-6">
+    <div className="space-y-6 animate-scale-in">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-zinc-800 pb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600/15">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-          </svg>
-        </div>
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-white">Analysis Results</h2>
-          <p className="text-xs text-zinc-500">
-            {data.target_role ? `Target: ${data.target_role}` : "Based on your submitted skills"}
-          </p>
+          <h2 className="text-xl font-bold text-white">Skill Analysis</h2>
+          <p className="text-sm text-zinc-500">Current vs Required</p>
         </div>
+        <MatchGauge score={matchPct} />
       </div>
 
-      {/* Score + Stats Row */}
-      <div className="grid gap-5 sm:grid-cols-[auto_1fr]">
-        <div className="card-glow flex items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900/60 p-6">
-          <GapScoreGauge score={data.skill_gap_score} />
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            {
-              label: "Matched",
-              value: data.matched_skills.length,
-              total: totalSkills,
-              icon: "✅",
-              color: "text-emerald-400",
-              bg: "bg-emerald-900/20",
-            },
-            {
-              label: "Missing",
-              value: data.missing_skills.length,
-              total: totalSkills,
-              icon: "⚠️",
-              color: "text-amber-400",
-              bg: "bg-amber-900/20",
-            },
-            {
-              label: "Match Rate",
-              value: `${matchPercent}%`,
-              total: null,
-              icon: "📊",
-              color: "text-teal-400",
-              bg: "bg-teal-900/20",
-            },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="card-glow flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-4"
-            >
-              <span className={`mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg text-lg ${stat.bg}`}>
-                {stat.icon}
-              </span>
-              <span className={`text-2xl font-bold ${stat.color}`}>{stat.value}</span>
-              <span className="text-xs text-zinc-500">
-                {stat.label}
-                {stat.total !== null && ` / ${stat.total}`}
-              </span>
-            </div>
-          ))}
-        </div>
+      {/* Radar Chart */}
+      <div className="glass-card rounded-2xl border border-zinc-800/50 p-6">
+        <RadarChart current={currentData} required={requiredData} />
       </div>
 
-      {/* Matched Skills */}
-      {data.matched_skills.length > 0 && (
-        <section className="animate-fade-in-up stagger-1">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 text-[10px]">✓</span>
-            Matched Skills
+      {/* Skill Breakdown */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* Matched Skills */}
+        <div className="space-y-3">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400 flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Matched ({metCount})
           </h3>
           <div className="flex flex-wrap gap-2">
-            {data.matched_skills.map((skill) => (
+            {data.met_skills?.slice(0, 6).map((skill, i) => (
               <span
-                key={skill}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-600/10 px-3 py-1.5 text-sm font-medium text-emerald-300 transition-colors hover:bg-emerald-600/15"
+                key={i}
+                className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-xs font-medium text-emerald-200/80"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                {skill}
+                {skill.skill_name}
               </span>
             ))}
+            {(!data.met_skills || data.met_skills.length === 0) && (
+              <p className="text-xs text-zinc-500">No skills matched yet</p>
+            )}
           </div>
-        </section>
-      )}
-
-      {/* Missing Skills Cards */}
-      {data.missing_skills.length > 0 && (
-        <section className="animate-fade-in-up stagger-2">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-[10px]">!</span>
-            Missing Skills — You Need to Learn
-          </h3>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {data.missing_skills.map((skill, i) => {
-              const priorityIndex = i;
-              const priority =
-                priorityIndex < 2 ? "Critical" : priorityIndex < 4 ? "High" : "Medium";
-              const priorityConfig = {
-                Critical: { color: "text-red-400", bg: "bg-red-900/25", border: "border-red-500/20", icon: "🔴" },
-                High: { color: "text-amber-400", bg: "bg-amber-900/25", border: "border-amber-500/20", icon: "🟡" },
-                Medium: { color: "text-teal-400", bg: "bg-teal-900/25", border: "border-teal-500/20", icon: "🟢" },
-              };
-              const pc = priorityConfig[priority];
-
-              return (
-                <div
-                  key={skill}
-                  className={`card-glow group rounded-xl border ${pc.border} bg-zinc-900/60 p-4 transition-all`}
-                >
-                  <div className="mb-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${pc.bg} text-sm`}>
-                        {pc.icon}
-                      </span>
-                      <h4 className="text-sm font-semibold text-white">{skill}</h4>
-                    </div>
-                    <span className={`rounded-md ${pc.bg} px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${pc.color}`}>
-                      {priority}
-                    </span>
-                  </div>
-
-                  <p className="mb-3 text-xs leading-relaxed text-zinc-500">
-                    This skill is required for your target role but was not found in your profile.
-                  </p>
-
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-red-500 to-amber-500 transition-all duration-700"
-                        style={{ width: "0%" }}
-                      />
-                    </div>
-                    <span className="text-[10px] font-medium text-zinc-500">0%</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* Action CTA */}
-      <div className="animate-fade-in-up stagger-3 flex flex-wrap items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-900/40 px-5 py-4">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-white">Ready to bridge the gap?</p>
-          <p className="text-xs text-zinc-500">View your personalized learning roadmap to start closing skill gaps.</p>
         </div>
-        <a
-          href="/roadmap"
-          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-teal-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-900/20 transition-all hover:shadow-lg hover:brightness-110"
-        >
-          View Roadmap
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </a>
+
+        {/* Missing Skills */}
+        <div className="space-y-3">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-400 flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+            To Learn ({gapCount})
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {data.skill_gaps?.slice(0, 6).map((skill, i) => (
+              <span
+                key={i}
+                className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 px-3 py-1.5 text-xs font-medium text-indigo-200/80"
+              >
+                {skill.skill_name}
+              </span>
+            ))}
+            {(!data.skill_gaps || data.skill_gaps.length === 0) && (
+              <p className="text-xs text-zinc-500">No gaps identified</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -3,6 +3,9 @@
     {
       "id": "frontend-developer",
       "title": "Frontend Developer",
+      "category": "Engineering",
+      "avgSalary": "$100k - $160k",
+      "demand": "High",
       "description": "Build user interfaces and web applications using modern frontend technologies.",
       "required_skills": [
         {"name": "HTML", "proficiency": "advanced"},
@@ -18,6 +21,9 @@
     {
       "id": "backend-developer",
       "title": "Backend Developer",
+      "category": "Engineering",
+      "avgSalary": "$110k - $170k",
+      "demand": "High",
       "description": "Design and implement server-side logic, APIs, and database systems.",
       "required_skills": [
         {"name": "Python", "proficiency": "advanced"},
@@ -33,6 +39,9 @@
     {
       "id": "data-scientist",
       "title": "Data Scientist",
+      "category": "Data",
+      "avgSalary": "$110k - $170k",
+      "demand": "High",
       "description": "Analyze complex datasets and build predictive models using statistical and ML techniques.",
       "required_skills": [
         {"name": "Python", "proficiency": "advanced"},
@@ -48,6 +57,9 @@
     {
       "id": "devops-engineer",
       "title": "DevOps Engineer",
+      "category": "Infrastructure",
+      "avgSalary": "$115k - $175k",
+      "demand": "Medium",
       "description": "Automate infrastructure, CI/CD pipelines, and manage cloud deployments.",
       "required_skills": [
         {"name": "Linux", "proficiency": "advanced"},
@@ -63,6 +75,9 @@
     {
       "id": "fullstack-developer",
       "title": "Full Stack Developer",
+      "category": "Engineering",
+      "avgSalary": "$120k - $180k",
+      "demand": "High",
       "description": "Develop both client-side and server-side software for complete web applications.",
       "required_skills": [
         {"name": "HTML", "proficiency": "advanced"},
@@ -79,6 +94,9 @@
     {
       "id": "ml-engineer",
       "title": "Machine Learning Engineer",
+      "category": "AI / ML",
+      "avgSalary": "$140k - $200k",
+      "demand": "High",
       "description": "Build and deploy machine learning models into production systems.",
       "required_skills": [
         {"name": "Python", "proficiency": "advanced"},

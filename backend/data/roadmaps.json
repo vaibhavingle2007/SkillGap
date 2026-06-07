@@ -1,0 +1,339 @@
+{
+  "roadmaps": {
+    "HTML": {
+      "skill": "HTML",
+      "learning_steps": [
+        "Learn HTML5 document structure: doctype, html, head, body, meta tags",
+        "Master semantic elements: header, nav, article, section, aside, footer",
+        "Understand forms and input types: text, email, number, date, file, validations",
+        "Work with tables, lists, and multimedia: audio, video, canvas",
+        "Build a multi-page static portfolio website using only HTML"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "CSS": {
+      "skill": "CSS",
+      "learning_steps": [
+        "Learn the box model: content, padding, border, margin",
+        "Master Flexbox and Grid layout: justify-content, align-items, grid-template",
+        "Understand CSS specificity, inheritance, and cascade order",
+        "Work with CSS animations, transitions, and keyframes",
+        "Practice responsive design with media queries and clamp()/min()/max()",
+        "Build a pixel-perfect clone of a popular landing page"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "JavaScript": {
+      "skill": "JavaScript",
+      "learning_steps": [
+        "Learn ES6+ fundamentals: let/const, arrow functions, template literals",
+        "Master asynchronous JS: Promises, async/await, fetch API, event loop",
+        "Understand the DOM API, event delegation, and event bubbling",
+        "Work with Array methods: map, filter, reduce, find, sort",
+        "Practice closures, this binding, and prototype chain",
+        "Build an interactive weather dashboard using a public API"
+      ],
+      "estimated_time": "4 weeks"
+    },
+    "React": {
+      "skill": "React",
+      "learning_steps": [
+        "Learn JSX, components, props, and state with useState/useEffect",
+        "Master the React lifecycle and hooks: useMemo, useCallback, useRef, useReducer",
+        "Understand state management: Context API, lifting state up",
+        "Work with React Router for SPA navigation",
+        "Practice handling forms: controlled components, validation libraries",
+        "Build a full CRUD todo app with local storage persistence"
+      ],
+      "estimated_time": "4 weeks"
+    },
+    "TypeScript": {
+      "skill": "TypeScript",
+      "learning_steps": [
+        "Learn basic types: string, number, boolean, arrays, tuples, enums",
+        "Master interfaces, type aliases, and union/intersection types",
+        "Understand generics, conditional types, and mapped types",
+        "Work with type narrowing, type guards, and assertions",
+        "Practice typing React components: props, events, hooks",
+        "Migrate a small JavaScript project to TypeScript"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Git": {
+      "skill": "Git",
+      "learning_steps": [
+        "Learn core commands: init, add, commit, status, log, diff",
+        "Master branching and merging: branch, checkout, merge, rebase",
+        "Understand remote workflows: clone, push, pull, fetch, remote",
+        "Work with advanced features: cherry-pick, stash, bisect, tags",
+        "Practice collaborative workflows: pull requests, code review, merge conflicts",
+        "Set up a CI/CD pipeline that runs on every git push"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "Responsive Design": {
+      "skill": "Responsive Design",
+      "learning_steps": [
+        "Learn mobile-first vs desktop-first approaches",
+        "Master CSS media queries: min-width, max-width, orientation",
+        "Understand relative units: rem, em, vw, vh, percentage, fr",
+        "Work with CSS frameworks: Tailwind, Bootstrap utilities for responsiveness",
+        "Practice accessibility: touch targets, font scaling, color contrast",
+        "Build a responsive dashboard that looks native on mobile and desktop"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "REST APIs": {
+      "skill": "REST APIs",
+      "learning_steps": [
+        "Learn HTTP methods: GET, POST, PUT, PATCH, DELETE and status codes",
+        "Master JSON data format and request/response headers",
+        "Understand REST principles: statelessness, resource-based URLs, HATEOAS",
+        "Work with authentication: API keys, Bearer tokens, JWT, OAuth 2.0",
+        "Practice with public APIs: fetch weather, currency, GitHub data",
+        "Build and document a REST API using FastAPI or Express"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "Python": {
+      "skill": "Python",
+      "learning_steps": [
+        "Learn Python syntax: variables, data types, control flow, functions",
+        "Master data structures: lists, dicts, sets, comprehensions, generators",
+        "Understand OOP: classes, inheritance, dunder methods, dataclasses",
+        "Work with modules: virtualenv, pip, requirements.txt, package management",
+        "Practice file I/O, decorators, context managers, and async/await",
+        "Build a CLI expense tracker using SQLite and argparse"
+      ],
+      "estimated_time": "4 weeks"
+    },
+    "SQL": {
+      "skill": "SQL",
+      "learning_steps": [
+        "Learn CRUD operations: SELECT, INSERT, UPDATE, DELETE with WHERE clauses",
+        "Master JOINs: INNER, LEFT, RIGHT, FULL, and CROSS JOINs",
+        "Understand aggregation: GROUP BY, HAVING, COUNT, SUM, AVG, window functions",
+        "Work with subqueries, CTEs (WITH clause), and derived tables",
+        "Practice indexing, EXPLAIN plans, and query optimization",
+        "Build a library management database with complex reports"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Docker": {
+      "skill": "Docker",
+      "learning_steps": [
+        "Learn Docker basics: images, containers, layers, Dockerfile syntax",
+        "Master multi-stage builds and image optimization",
+        "Understand Docker Compose: services, networks, volumes, depends_on",
+        "Work with container registries: Docker Hub, ECR, GHCR",
+        "Practice debugging containers, health checks, and Docker networking",
+        "Containerize a full-stack app: frontend, backend, and database"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "FastAPI": {
+      "skill": "FastAPI",
+      "learning_steps": [
+        "Learn path operations: GET, POST, PUT, DELETE with type hints",
+        "Master Pydantic models: request/response validation, nested schemas",
+        "Understand dependency injection, background tasks, and middleware",
+        "Work with async database access: SQLAlchemy async, asyncpg",
+        "Practice authentication: OAuth2 password flow, JWT tokens",
+        "Build a production-ready API with auto-generated docs, tests, and deployment"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "PostgreSQL": {
+      "skill": "PostgreSQL",
+      "learning_steps": [
+        "Learn PostgreSQL-specific features: JSONB, arrays, ranges, UUIDs",
+        "Master advanced SQL: CTEs, recursive queries, lateral joins",
+        "Understand indexing: B-tree, GIN, GiST, partial and expression indexes",
+        "Work with transactions, isolation levels, and concurrency control",
+        "Practice backup, restore, pg_dump, and replication concepts",
+        "Design a normalized schema with constraints, triggers, and stored procedures"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Linux": {
+      "skill": "Linux",
+      "learning_steps": [
+        "Learn shell navigation: ls, cd, cat, grep, find, sed, awk",
+        "Master file permissions: chmod, chown, ACLs, root/sudo usage",
+        "Understand process management: ps, top, systemctl, cron, log management",
+        "Work with networking: ifconfig, netstat, ss, iptables, DNS config",
+        "Practice shell scripting: variables, loops, functions, error handling",
+        "Set up a web server: install nginx, configure SSL, deploy an app"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Machine Learning": {
+      "skill": "Machine Learning",
+      "learning_steps": [
+        "Learn core concepts: supervised vs unsupervised, bias-variance, overfitting",
+        "Master preprocessing: standardization, encoding, imputation, feature scaling",
+        "Understand algorithms: linear/logistic regression, decision trees, SVM, k-means",
+        "Work with model evaluation: cross-validation, precision/recall, ROC-AUC, confusion matrix",
+        "Practice pipelines and hyperparameter tuning with Grid/Random Search",
+        "Build an end-to-end ML pipeline from data exploration to model deployment"
+      ],
+      "estimated_time": "6 weeks"
+    },
+    "Pandas": {
+      "skill": "Pandas",
+      "learning_steps": [
+        "Learn DataFrames and Series: creation, indexing, slicing, filtering",
+        "Master data manipulation: groupby, merge, concat, pivot, melt",
+        "Understand data cleaning: handling duplicates, missing data, datatypes",
+        "Work with time series: datetime parsing, resampling, rolling windows",
+        "Practice I/O: CSV, Excel, SQL, JSON, Parquet formats",
+        "Analyze a real-world dataset and produce an insights report"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "NumPy": {
+      "skill": "NumPy",
+      "learning_steps": [
+        "Learn ndarrays: creation, shape, dtype, slicing, boolean indexing",
+        "Master broadcasting rules and vectorized operations",
+        "Understand universal functions (ufuncs) and linear algebra operations",
+        "Work with random sampling, statistical distributions, and masking",
+        "Practice memory-efficient array operations vs Python lists",
+        "Implement matrix operations from scratch using NumPy"
+      ],
+      "estimated_time": "2 weeks"
+    },
+    "Statistics": {
+      "skill": "Statistics",
+      "learning_steps": [
+        "Learn descriptive stats: mean, median, mode, std dev, percentiles",
+        "Master probability distributions: normal, binomial, Poisson, uniform",
+        "Understand inferential stats: confidence intervals, hypothesis testing, p-values",
+        "Work with correlation, causation, and regression analysis (OLS, multiple)",
+        "Practice A/B testing design: sample size, power, significance, effect size",
+        "Apply statistical tests to a business dataset and draw actionable conclusions"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Data Visualization": {
+      "skill": "Data Visualization",
+      "learning_steps": [
+        "Learn matplotlib basics: figures, subplots, styles, colors, annotations",
+        "Master seaborn for statistical plots: distplot, boxplot, heatmap, pairplot",
+        "Understand interactive visualization with Plotly or Bokeh",
+        "Work with dashboards: Dash, Streamlit, or Panel for web deployment",
+        "Practice best practices: color theory, avoiding chart junk, accessibility",
+        "Build a public-facing analytics dashboard with real-world data"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Scikit-learn": {
+      "skill": "Scikit-learn",
+      "learning_steps": [
+        "Learn the estimator API: fit, predict, transform, pipelines",
+        "Master preprocessing: StandardScaler, OneHotEncoder, ColumnTransformer",
+        "Understand algorithms: RandomForest, XGBoost, LogisticRegression, KMeans, PCA",
+        "Work with model evaluation: GridSearchCV, cross_validate, classification_report",
+        "Practice feature engineering: polynomial features, feature selection, importance",
+        "Build a complete ML workflow and serialize the model with joblib and FastAPI"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Kubernetes": {
+      "skill": "Kubernetes",
+      "learning_steps": [
+        "Learn K8s architecture: pods, nodes, control plane, etcd, kubelet",
+        "Master workload resources: Deployments, ReplicaSets, StatefulSets, DaemonSets",
+        "Understand networking: Services, Ingress, DNS, NetworkPolicies",
+        "Work with storage: PV, PVC, StorageClasses, configmaps, secrets",
+        "Practice operations: kubectl, helm, rolling updates, rollbacks, health checks",
+        "Deploy a multi-service app with auto-scaling and self-healing on a local cluster"
+      ],
+      "estimated_time": "5 weeks"
+    },
+    "CI/CD": {
+      "skill": "CI/CD",
+      "learning_steps": [
+        "Learn CI/CD concepts: build, test, lint, deploy stages and artifacts",
+        "Master GitHub Actions: workflows, triggers, reusable actions, matrices",
+        "Understand pipeline as code: YAML structure, environment variables, secrets",
+        "Work with testing automation: unit tests, integration tests, coverage gates",
+        "Practice deployment strategies: Blue/Green, Canary, Rolling, Feature flags",
+        "Set up a full pipeline: build Docker image, run tests, push to registry, deploy to staging"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "AWS": {
+      "skill": "AWS",
+      "learning_steps": [
+        "Learn IAM: users, groups, roles, policies, MFA, least privilege",
+        "Master core services: EC2, S3, RDS, Lambda, CloudWatch, Route53",
+        "Understand VPC: subnets, ACLs, security groups, NAT gateway, peering",
+        "Work with managed services: API Gateway, SNS, SQS, EventBridge",
+        "Practice infrastructure as code: CloudFormation or Terraform for AWS resources",
+        "Deploy a serverless REST API with Lambda, API Gateway, DynamoDB"
+      ],
+      "estimated_time": "5 weeks"
+    },
+    "Terraform": {
+      "skill": "Terraform",
+      "learning_steps": [
+        "Learn HCL syntax: variables, locals, outputs, resources, data sources",
+        "Master state management: remote state backends, workspaces, state locking",
+        "Understand modules: creating reusable modules, module sources, versioning",
+        "Work with provisioning: provisioners, null resources, depends_on logic",
+        "Practice planning and applying safely: terraform plan, targeted apply, taint",
+        "Provision a complete 3-tier infrastructure: app server, database, load balancer"
+      ],
+      "estimated_time": "3 weeks"
+    },
+    "Deep Learning": {
+      "skill": "Deep Learning",
+      "learning_steps": [
+        "Learn neural network fundamentals: perceptrons, activation functions, backpropagation",
+        "Master CNNs for computer vision: convolution, pooling, dropout, batch norm",
+        "Understand sequence models: RNNs, LSTMs, GRUs, attention mechanisms",
+        "Work with transfer learning and pre-trained models: ResNet, BERT, GPT-style",
+        "Practice training: learning rate scheduling, early stopping, mixed precision",
+        "Train and deploy an image classifier using PyTorch or TensorFlow"
+      ],
+      "estimated_time": "6 weeks"
+    },
+    "TensorFlow": {
+      "skill": "TensorFlow",
+      "learning_steps": [
+        "Learn TensorFlow/Keras basics: layers, models, compile, fit, evaluate",
+        "Master the functional API for multi-input/multi-output architectures",
+        "Understand custom training loops, callbacks, and metrics",
+        "Work with TF.data pipeline: mapping, batching, prefetching, cache",
+        "Practice model saving/loading: SavedModel format, TensorFlow Serving",
+        "Build and deploy a text classification model using TF and Keras"
+      ],
+      "estimated_time": "4 weeks"
+    },
+    "MLOps": {
+      "skill": "MLOps",
+      "learning_steps": [
+        "Learn ML lifecycle: experimentation, reproducibility, packaging, deployment",
+        "Master model versioning: MLflow, DVC for tracking experiments and artifacts",
+        "Understand CI/CD for ML: data validation, model testing, canary deployments",
+        "Work with serving: REST APIs, batch inference, feature stores (Feast)",
+        "Practice monitoring: model drift, data drift, latency, whylogs or Evidently",
+        "Set up an end-to-end MLOps pipeline with experiment tracking, registry, and serving"
+      ],
+      "estimated_time": "5 weeks"
+    },
+    "Node.js": {
+      "skill": "Node.js",
+      "learning_steps": [
+        "Learn Node.js event loop, non-blocking I/O, and module system (CommonJS/ESM)",
+        "Master Express.js: routing, middleware, error handling, template engines",
+        "Understand async patterns: callbacks, promises, streams, EventEmitter",
+        "Work with databases: Mongoose (MongoDB), Sequelize (SQL), Prisma ORM",
+        "Practice authentication: Passport.js, JWT, bcrypt, session management",
+        "Build a real-time chat application with Socket.IO and Redis pub/sub"
+      ],
+      "estimated_time": "4 weeks"
+    }
+  }
+}

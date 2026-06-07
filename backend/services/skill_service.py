@@ -23,6 +23,7 @@ from models.schemas import (
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "jobs.json"
 YOUTUBE_LINKS_PATH = Path(__file__).resolve().parent.parent / "data" / "youtube_links.json"
+ROADMAPS_PATH = Path(__file__).resolve().parent.parent / "data" / "roadmaps.json"
 
 PROFICIENCY_LEVELS = {"beginner": 1, "intermediate": 2, "advanced": 3}
 
@@ -38,6 +39,14 @@ def _load_youtube_links() -> dict:
         with open(YOUTUBE_LINKS_PATH, "r") as f:
             return json.load(f)
     return {}
+
+
+def _load_roadmaps() -> dict:
+    """Load static skill roadmaps from roadmaps.json."""
+    if ROADMAPS_PATH.exists():
+        with open(ROADMAPS_PATH, "r") as f:
+            return json.load(f)
+    return {"roadmaps": {}}
 
 
 def get_all_job_roles() -> List[JobRole]:
@@ -232,6 +241,29 @@ def get_youtube_resources(skills: List[str]) -> List[YouTubeSkillResource]:
         results.append(YouTubeSkillResource(skill=skill, youtube_links=links))
 
     return results
+
+
+def get_static_roadmap(missing_skills: List[str]) -> dict:
+    """Return a roadmap from curated static JSON data in roadmaps.json.
+
+    Replaces the legacy AI-powered generation (ai_service.generate_ai_roadmap).
+    Preserves the same output shape: {"roadmap": [AIRoadmapSkill]}.
+    """
+    data = _load_roadmaps()
+    all_roadmaps = data.get("roadmaps", {})
+    roadmap: List[dict] = []
+
+    for skill_name in missing_skills:
+        entry = all_roadmaps.get(skill_name)
+        if entry:
+            roadmap.append({
+                "skill": entry["skill"],
+                "learning_steps": entry["learning_steps"],
+                "estimated_time": entry["estimated_time"],
+                "youtube_videos": [],
+            })
+
+    return {"roadmap": roadmap}
 
 
 # --- Dashboard: aggregates gap analysis + roadmap summary in one call ---

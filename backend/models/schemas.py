@@ -12,6 +12,9 @@ class Skill(BaseModel):
 class JobRole(BaseModel):
     id: str
     title: str
+    category: str = ""
+    avgSalary: str = ""
+    demand: str = ""
     description: str
     required_skills: List[Skill]
 

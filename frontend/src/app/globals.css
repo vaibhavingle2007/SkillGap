@@ -16,6 +16,9 @@
 
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --shadow-glow: 0 0 20px -5px var(--accent-soft);
+  --shadow-inner-glow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 :root {
@@ -24,13 +27,13 @@
   --surface: #18181b;
   --surface-alt: #27272a;
   --border-color: #3f3f46;
-  --accent: #0d9488;
-  --accent-soft: #0d94881a;
-  --accent-glow: #14b8a6;
+  --accent: #6366f1;
+  --accent-soft: rgba(99, 102, 241, 0.15);
+  --accent-glow: #818cf8;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --muted: #a1a1aa;
+  --muted: #71717a;
 }
 
 * {
@@ -47,8 +50,8 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -65,7 +68,7 @@ body {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -81,7 +84,7 @@ body {
 @keyframes scaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   to {
     opacity: 1;
@@ -94,19 +97,18 @@ body {
   100% { background-position: 200% 0; }
 }
 
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  80%, 100% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out both;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in {
@@ -114,7 +116,11 @@ body {
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.3s ease-out both;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
 .stagger-1 { animation-delay: 0.05s; }
@@ -124,29 +130,59 @@ body {
 .stagger-5 { animation-delay: 0.25s; }
 .stagger-6 { animation-delay: 0.3s; }
 
-/* Card glow hover */
-.card-glow {
-  position: relative;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.card-glow:hover {
-  box-shadow: 0 0 24px -6px rgba(13, 148, 136, 0.15);
-  border-color: rgba(13, 148, 136, 0.3);
+/* Glass Card */
+.glass-card {
+  background: rgba(24, 24, 27, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Progress bar shimmer */
+.glass-card:hover {
+  background: rgba(39, 39, 42, 0.8);
+  border-color: rgba(63, 63, 70, 0.8);
+}
+
+/* Glow Effects */
+.hover-glow {
+  position: relative;
+}
+
+.hover-glow::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, var(--accent), var(--success));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-glow:hover::after {
+  opacity: 0.15;
+}
+
+/* Text Gradient */
+.text-gradient {
+  background: linear-gradient(to right, #6366f1, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Progress Shimmer */
 .progress-shimmer {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.15) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
-/* Circular progress */
-.circular-progress {
-  transform: rotate(-90deg);
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
