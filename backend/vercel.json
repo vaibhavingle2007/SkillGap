@@ -7,6 +7,14 @@
   ],
   "routes": [
     {
+      "src": "/swagger-ui-bundle.js",
+      "dest": "/public/swagger-ui-bundle.js"
+    },
+    {
+      "src": "/swagger-ui.css",
+      "dest": "/public/swagger-ui.css"
+    },
+    {
       "src": "/(.*)",
       "dest": "api/index.py"
     }

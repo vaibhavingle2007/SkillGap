@@ -13,6 +13,11 @@ app = FastAPI(
     title="Skill Gap Analyzer API",
     description="Analyze skill gaps, generate learning roadmaps, and find resources.",
     version="1.0.0",
+    # Disable the default docs route so our custom one (serving bundled assets
+    # from backend/public/) can take over — see the @app.get("/docs") below.
+    docs_url=None,
+    redoc_url=None,
+    swagger_ui_parameters={"syntaxHighlight.theme": "obsidian"},
 )
 
 app.add_middleware(
@@ -66,10 +71,24 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def root():
     return {
         "message": "Skill Gap Analyzer API",
         "docs": "/docs",
         "endpoints": ["/job-roles", "/analyze-skills", "/roadmap", "/youtube-resources", "/dashboard"],
     }
+
+
+# Serve Swagger UI from locally-bundled assets in backend/public/.
+# FastAPI defaults to a jsdelivr CDN URL; we override to use the files
+# shipped in the repo so the docs work in restricted networks.
+@app.get("/docs", include_in_schema=False)
+async def custom_swagger_ui_html():
+    from fastapi.openapi.docs import get_swagger_ui_html
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=app.title + " — Swagger UI",
+        swagger_js_url="/swagger-ui-bundle.js",
+        swagger_css_url="/swagger-ui.css",
+    )
