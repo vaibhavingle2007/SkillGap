@@ -7,7 +7,10 @@ from fastapi.responses import JSONResponse
 
 from routes import jobs, analysis, roadmap, resources, dashboard
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+# Comma-separated list of allowed origins for CORS.
+# Defaults to localhost + the deployed frontend so local dev and
+# production both work out of the box.
+_ALLOWED_ORIGINS = os.getenv("FRONTEND_URL", "http://localhost:3000,https://skill-forge-sand.vercel.app").split(",")
 
 app = FastAPI(
     title="Skill Gap Analyzer API",
@@ -22,7 +25,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL],
+    allow_origins=_ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
