@@ -15,8 +15,8 @@ from fastapi import HTTPException
 load_dotenv(override=True)
 
 NEBIUS_API_KEY = os.getenv("NEBIUS_API_KEY", "")
-NEBIUS_MODEL = os.getenv("NEBIUS_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
-NEBIUS_BASE_URL = "https://api.studio.nebius.com/v1/"
+NEBIUS_MODEL = os.getenv("nvidia/nemotron-3-ultra-550b-a55b")
+NEBIUS_BASE_URL = "https://integrate.api.nvidia.com/v1"
 
 
 def _get_client() -> OpenAI:
