@@ -107,7 +107,7 @@ npm run dev
 
 See `.env.example` files in each subdirectory for the full list.
 
-- **Backend** `backend/.env` — only `NEBIUS_API_KEY` is optional (enables AI roadmap generation).
+- **Backend** `backend/.env` — only `NVIDIA_API_KEY` is optional (enables AI roadmap generation).
 - **Frontend** `frontend/.env.local` — `NEXT_PUBLIC_API_URL` defaults to the deployed backend; Firebase vars are required for auth & cloud sync.
 
 ---
