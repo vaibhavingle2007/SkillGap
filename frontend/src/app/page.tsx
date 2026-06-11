@@ -71,7 +71,7 @@ const testimonials = [
   {
     name: "Alex Chen",
     role: "ML Engineer @ Google",
-    quote: "SkillForge identified gaps I didn't even know I had. Landed my dream role in 6 months.",
+    quote: "SkillGAP identified gaps I didn't even know I had. Landed my dream role in 6 months.",
     initials: "AC",
     color: "from-indigo-500 to-purple-500",
   },
