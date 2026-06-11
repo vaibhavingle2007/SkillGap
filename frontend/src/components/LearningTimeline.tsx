@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Link from "next/link";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useData } from "@/context/DataContext";
 import { useAuth } from "@/context/AuthContext";
 import { saveRoadmapProgress, getRoadmapProgress } from "@/lib/userData";
 import {
-  Play, ExternalLink, BookOpen, FileText, Lightbulb, Link2, GitBranch,
+  Play, ExternalLink, BookOpen, FileText, Lightbulb, GitBranch,
   Clock, ChevronDown, ChevronUp, CheckCircle2, Circle, RotateCcw, Trophy,
+  Lock, Zap, Star, MapPin,
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const PROGRESS_KEY = "skillforge_roadmap_progress";
+const CELEBRATED_KEY = "skillforge_celebrated";
 
 /* ──────────────────────────── */
 /*  Local progress helpers       */
@@ -47,7 +50,100 @@ function normaliseSkill(name: string): string {
   return name.trim().toLowerCase();
 }
 
-/* ─── ResourceCard ─── */
+/* ── XP Config ── */
+const XP_PER_STEP = 50;
+function getLevel(totalXP: number) {
+  return Math.floor(totalXP / 100) + 1;
+}
+function getXPForNextLevel(totalXP: number) {
+  const level = getLevel(totalXP);
+  return level * 100;
+}
+
+/* ── Circular Progress ── */
+function CircularProgress({ value, size = 64, strokeWidth = 4, color = "#6366f1" }: { value: number; size?: number; strokeWidth?: number; color?: string }) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (value / 100) * circumference;
+  return (
+    <svg width={size} height={size} className="-rotate-90">
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#27272a" strokeWidth={strokeWidth} />
+      <motion.circle
+        cx={size / 2} cy={size / 2} r={radius}
+        fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round"
+        strokeDasharray={circumference} initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: offset }} transition={{ duration: 1.5, ease: "easeOut" }}
+      />
+    </svg>
+  );
+}
+
+/* ── Celebration Overlay ── */
+function CelebrationOverlay({ onClose }: { onClose: () => void }) {
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; color: string; delay: number }>>([]);
+  useEffect(() => {
+    const p = Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      color: ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#3b82f6"][i % 5],
+      delay: Math.random() * 0.5,
+    }));
+    setParticles(p);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* Particle burst */}
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute h-2 w-2 rounded-full"
+          style={{ backgroundColor: p.color, left: `${p.x}%`, top: `${p.y}%` }}
+          initial={{ scale: 0, opacity: 1 }}
+          animate={{ scale: [0, 1.5, 0], opacity: [1, 1, 0], x: [0, (Math.random() - 0.5) * 300], y: [0, (Math.random() - 0.5) * 300] }}
+          transition={{ duration: 1.5, delay: p.delay, ease: "easeOut" }}
+        />
+      ))}
+
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="relative z-10 mx-4 max-w-md text-center"
+      >
+        <div className="mb-6 flex items-center justify-center">
+          <motion.div
+            initial={{ y: -50, rotate: -20 }} animate={{ y: 0, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 150, damping: 12 }}
+            className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-2xl shadow-amber-500/30"
+          >
+            <Trophy className="h-12 w-12 text-white" />
+          </motion.div>
+        </div>
+        <h2 className="text-4xl font-black tracking-tight text-white mb-2">Quest Complete!</h2>
+        <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500/20 to-indigo-500/20 border border-emerald-500/30 px-4 py-1.5 mb-6">
+          <Star className="h-4 w-4 text-amber-400" />
+          <span className="text-sm font-bold text-emerald-300">Career Ready</span>
+        </div>
+        <p className="text-zinc-400 text-sm mb-8">You have completed every mission in your roadmap. Time to apply those skills!</p>
+        <div className="flex gap-3 justify-center">
+          <Link href="/dashboard" className="rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-indigo-900/30 transition-all hover:scale-105 active:scale-95">
+            Go to Dashboard
+          </Link>
+          <button onClick={onClose} className="rounded-2xl border border-zinc-700 bg-zinc-900/40 px-6 py-3 text-sm font-bold uppercase tracking-wider text-zinc-300 transition-all hover:bg-zinc-800">
+            Keep Exploring
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ── ResourceCard ── */
 function ResourceCard({ resource, index }: { resource: Resource; index: number }) {
   if (resource.url === "#") return null;
   const kinds: Record<Resource["type"], { icon: React.ReactNode; cls: string; label: string }> = {
@@ -68,8 +164,8 @@ function ResourceCard({ resource, index }: { resource: Resource; index: number }
         <p className="text-sm font-medium truncate">{resource.title}</p>
         <div className="flex items-center gap-2 mt-0.5">
           <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">{cfg.label}</span>
-          {resource.duration && (<><span className="text-zinc-600">•</span><span className="text-[10px] font-medium opacity-70 flex items-center gap-1"><Clock className="h-3 w-3" />{resource.duration}</span></>)}
-          {resource.channel && (<><span className="text-zinc-600">•</span><span className="text-[10px] font-medium opacity-70">{resource.channel}</span></>)}
+          {resource.duration && (<> <span className="text-zinc-600">•</span><span className="text-[10px] font-medium opacity-70 flex items-center gap-1"><Clock className="h-3 w-3" />{resource.duration}</span></>)}
+          {resource.channel && (<> <span className="text-zinc-600">•</span><span className="text-[10px] font-medium opacity-70">{resource.channel}</span></>)}
         </div>
       </div>
       <ExternalLink className="h-4 w-4 shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -87,7 +183,13 @@ function StepScrubber({ done, total }: { done: number; total: number }) {
         <span className={done === total ? "text-emerald-400" : "text-indigo-400"}>{pct}%</span>
       </div>
       <div className="h-1.5 w-full rounded-full bg-zinc-800 overflow-hidden">
-        <div className="h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${pct}%`, background: done === total ? "#10b981" : "#6366f1" }} />
+        <motion.div
+          className="h-full rounded-full"
+          style={{ background: done === total ? "#10b981" : "#6366f1" }}
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
       </div>
     </div>
   );
@@ -155,6 +257,18 @@ export default function LearningTimeline() {
   /* Map: skillKey (lowercase) → list of completed step strings */
   const [progress, setProgress] = useState<Record<string, string[]>>({});
 
+  /* Celebration state */
+  const [showCelebration, setShowCelebration] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  /* Scroll-driven path progress */
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+  const travelerY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   /* ── Load progress on mount ── */
   useEffect(() => {
     (async () => {
@@ -171,14 +285,12 @@ export default function LearningTimeline() {
 
   /* ── Save progress whenever it changes ── */
   useEffect(() => {
-    // Guard: don't save until mounted / loaded
     if (Object.keys(progress).length === 0 && isLoading) return;
     saveLocalProgress(progress);
     (async () => {
       if (user) {
         for (const [skillKey, steps] of Object.entries(progress)) {
           try {
-            // Find the original skill name by matching keys
             const original = items.find(r => normaliseSkill(r.skill) === skillKey)?.skill || skillKey;
             await saveRoadmapProgress(user, original, steps, steps.length);
           } catch { /* Firestore best-effort */ }
@@ -252,6 +364,37 @@ export default function LearningTimeline() {
     setProgress(prev => { const p = { ...prev }; delete p[key]; return p; });
   }, []);
 
+  /* ── Est. completion date ── */
+  const estCompletion = useMemo(() => {
+    const weeks = items.reduce((acc, it) => {
+      const match = it.estimated_time.match(/(\d+)/);
+      return acc + (match ? parseInt(match[1]) : 0);
+    }, 0);
+    const date = new Date();
+    date.setDate(date.getDate() + weeks * 7);
+    return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  }, [items]);
+
+  /* Overall percentage & XP */
+  const totalSteps = items.reduce((acc, it) => acc + (it.learning_steps?.length || 0), 0);
+  const doneSteps = items.reduce((acc, it) => {
+    const key = normaliseSkill(it.skill);
+    const completed = progress[key] || [];
+    const existing = new Set(it.learning_steps.map(toStepStr));
+    return acc + completed.filter(s => existing.has(s)).length;
+  }, 0);
+  const overallPct = totalSteps === 0 ? 0 : Math.round((doneSteps / totalSteps) * 100);
+  const totalXP = doneSteps * XP_PER_STEP;
+  const level = getLevel(totalXP);
+
+  /* Celebration trigger */
+  useEffect(() => {
+    if (overallPct === 100 && !sessionStorage.getItem(CELEBRATED_KEY)) {
+      setShowCelebration(true);
+      sessionStorage.setItem(CELEBRATED_KEY, "true");
+    }
+  }, [overallPct]);
+
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -267,70 +410,84 @@ export default function LearningTimeline() {
 
   if (items.length === 0) return <TimelineEmpty />;
 
-  /* Overall percentage */
-  const totalSteps = items.reduce((acc, it) => acc + (it.learning_steps?.length || 0), 0);
-  const doneSteps = items.reduce((acc, it) => {
-    const key = normaliseSkill(it.skill);
-    const completed = progress[key] || [];
-    /* count distinct completed steps that actually exist */
-    const existing = new Set(it.learning_steps.map(toStepStr));
-    return acc + completed.filter(s => existing.has(s)).length;
-  }, 0);
-  const overallPct = totalSteps === 0 ? 0 : Math.round((doneSteps / totalSteps) * 100);
-
   return (
-    <div className="space-y-10">
-      {/* Header with progress */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-zinc-500 mb-1">
-            <span className="h-px w-8 bg-zinc-800" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Learning Path</span>
+    <div className="space-y-10" ref={containerRef}>
+      <AnimatePresence>
+        {showCelebration && <CelebrationOverlay onClose={() => setShowCelebration(false)} />}
+      </AnimatePresence>
+
+      {/* ── Header: Your Career Quest ── */}
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-zinc-500">
+            <MapPin className="h-3.5 w-3.5" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Your Career Quest</span>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-white">{targetRole || "My Roadmap"}</h2>
-          <p className="mt-1 text-sm text-zinc-500">{doneSteps} of {totalSteps} steps completed</p>
+          <h2 className="text-3xl font-black tracking-tight text-white lg:text-4xl">{targetRole || "My Roadmap"}</h2>
+          <p className="text-sm text-zinc-500">Est. completion: {estCompletion}</p>
         </div>
 
-        <div className="w-full max-w-xs">
-          <StepScrubber done={doneSteps} total={totalSteps} />
-          {overallPct === 100 && (
-            <div className="mt-2 flex items-center gap-2 text-xs font-bold text-emerald-400">
-              <Trophy className="h-4 w-4" /> Roadmap Complete — Nice work!
+        <div className="flex items-center gap-4">
+          {/* Circular Progress */}
+          <div className="relative">
+            <CircularProgress value={overallPct} size={56} strokeWidth={4} color="#6366f1" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[10px] font-black text-white">{overallPct}%</span>
             </div>
-          )}
+          </div>
+          {/* Level Badge */}
+          <div className="flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5">
+            <Zap className="h-4 w-4 text-amber-400" />
+            <span className="text-xs font-black text-amber-300">Lv. {level}</span>
+          </div>
         </div>
       </div>
 
-      {/* Items */}
-      <div className="space-y-8">
-        {items.map((item, idx) => {
-          const skillKey = normaliseSkill(item.skill);
-          const stepList = item.learning_steps.map(toStepStr);
-          const completed = progress[skillKey] || [];
-          const skillPct = stepList.length === 0 ? 0 : Math.round((completed.filter(s => stepList.includes(s)).length / stepList.length) * 100);
-          const isAllDone = skillPct === 100 && stepList.length > 0;
-          const isExpanded = expandedIdx === idx;
-          const isCurrent = idx === 0;
-          const connectorEnd = idx < items.length - 1;
+      {/* ── Scroll Progress Path ── */}
+      <div className="relative">
+        {/* Track */}
+        <div className="absolute left-[15px] top-0 bottom-0 w-0.5 bg-zinc-800 rounded-full" />
+        {/* Progress fill */}
+        <motion.div
+          className="absolute left-[15px] top-0 w-0.5 bg-indigo-500 rounded-full origin-top"
+          style={{ scaleY: scrollYProgress, height: "100%" }}
+        />
+        {/* Traveler dot */}
+        <motion.div
+          className="absolute left-[12px] z-10 h-4 w-4 rounded-full bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+          style={{ top: travelerY }}
+        />
 
-          return (
-            <div key={idx} className="relative flex gap-6">
-              {/* Timeline connector */}
-              {connectorEnd && <div className="absolute left-[15px] top-8 bottom-0 w-0.5 bg-zinc-800" />}
+        {/* Items */}
+        <div className="space-y-8 pl-10">
+          {items.map((item, idx) => {
+            const skillKey = normaliseSkill(item.skill);
+            const stepList = item.learning_steps.map(toStepStr);
+            const completed = progress[skillKey] || [];
+            const skillPct = stepList.length === 0 ? 0 : Math.round((completed.filter(s => stepList.includes(s)).length / stepList.length) * 100);
+            const isAllDone = skillPct === 100 && stepList.length > 0;
+            const isExpanded = expandedIdx === idx;
+            const isCurrent = idx === 0;
+            const isLocked = !isCurrent && !isAllDone && idx > 0;
+            const connectorEnd = idx < items.length - 1;
 
-              {/* Badge column */}
-              <div className="flex flex-col items-center">
-                <div className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                  isAllDone ? "border-emerald-500 bg-emerald-500 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]"
-                    : isCurrent ? "border-indigo-500 bg-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.5)]"
-                    : "border-zinc-700 bg-zinc-900 text-zinc-500"
-                }`}>
-                  {isAllDone ? <CheckCircle2 className="h-4 w-4" /> : <Play className="h-3.5 w-3.5 fill-current" />}
+            return (
+              <div key={idx} className="relative">
+                {/* Timeline connector */}
+                {connectorEnd && <div className="absolute left-[-25px] top-8 bottom-0 w-0.5 bg-zinc-800" />}
+
+                {/* Badge column */}
+                <div className="flex flex-col items-center absolute left-[-33px] top-0">
+                  <div className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                    isAllDone ? "border-emerald-500 bg-emerald-500 text-white shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+                      : isCurrent ? "border-indigo-500 bg-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.5)]"
+                      : "border-zinc-700 bg-zinc-900 text-zinc-500"
+                  }`}>
+                    {isAllDone ? <CheckCircle2 className="h-4 w-4" /> : isLocked ? <Lock className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-current" />}
+                  </div>
                 </div>
-              </div>
 
-              {/* Card */}
-              <div className="flex-1">
+                {/* Card */}
                 <div className={`glass-card rounded-2xl border transition-all ${
                   isAllDone ? "border-emerald-500/20 bg-emerald-500/[0.03]"
                     : isCurrent ? "border-indigo-500/30 bg-indigo-500/5"
@@ -344,12 +501,19 @@ export default function LearningTimeline() {
                           <h3 className={`text-lg font-bold ${isAllDone ? "text-emerald-300" : isCurrent ? "text-white" : "text-zinc-300"}`}>{item.skill}</h3>
                           {isAllDone && (
                             <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                              <CheckCircle2 className="h-3 w-3" /> Complete
+                              <CheckCircle2 className="h-3 w-3" /> Quest Complete
                             </span>
                           )}
                           {!isAllDone && isCurrent && (
-                            <span className="rounded-full bg-indigo-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-indigo-400">In Progress</span>
+                            <span className="rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-400 animate-pulse">Continue Quest</span>
                           )}
+                          {!isAllDone && !isCurrent && (
+                            <span className="rounded-full bg-zinc-800 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-zinc-500">Locked</span>
+                          )}
+                          {/* XP chip */}
+                          <span className="hidden sm:flex items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-black text-indigo-400">
+                            <Zap className="h-3 w-3" /> +{XP_PER_STEP * stepList.length} XP
+                          </span>
                         </div>
                         <div className="mt-2 flex items-center gap-3">
                           <StepScrubber done={completed.filter(s => stepList.includes(s)).length} total={stepList.length} />
@@ -386,7 +550,7 @@ export default function LearningTimeline() {
                     <div className="border-t border-zinc-800/50 bg-zinc-950/20 p-5">
                       {/* Steps with checkboxes */}
                       <div className="mb-6">
-                        <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Learning Steps</h4>
+                        <h4 className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Missions</h4>
                         <div className="space-y-2">
                           {stepList.map((step, sIdx) => {
                             const isDone = completed.includes(step);
@@ -402,6 +566,9 @@ export default function LearningTimeline() {
                                   )}
                                 </div>
                                 <span className={`flex-1 text-sm transition-colors ${isDone ? "text-zinc-500 line-through" : "text-zinc-300"}`}>{step}</span>
+                                <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-bold text-indigo-400">
+                                  <Zap className="h-3 w-3" /> +{XP_PER_STEP} XP
+                                </span>
                                 <input
                                   type="checkbox"
                                   className="sr-only"
@@ -417,7 +584,6 @@ export default function LearningTimeline() {
                       {/* Resources */}
                       {item.resources && item.resources.filter(r => r.url !== "#").length > 0 && (
                         <div className="space-y-6">
-                          {/* Group resources by type for a tidy grid */}
                           {(["youtube", "course", "cheatsheet", "notes", "article", "docs", "github"] as Resource["type"][]).map((t) => {
                             const rs = item.resources!.filter(r => r.type === t && r.url !== "#");
                             if (!rs.length) return null;
@@ -453,9 +619,9 @@ export default function LearningTimeline() {
                   )}
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -527,3 +693,26 @@ const enhancedFallbackRoadmap: RoadmapItem[] = [
     ],
   },
 ];
+
+/* ─── Confetti on step completion ─── */
+function MiniConfetti({ active }: { active: boolean }) {
+  if (!active) return null;
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 0 }}
+      transition={{ duration: 0.8 }}
+      className="absolute inset-0 pointer-events-none flex items-center justify-center"
+    >
+      {Array.from({ length: 6 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute h-1.5 w-1.5 rounded-full bg-indigo-400"
+          initial={{ scale: 0, x: 0, y: 0 }}
+          animate={{ scale: [0, 1, 0], x: Math.cos((i / 6) * Math.PI * 2) * 30, y: Math.sin((i / 6) * Math.PI * 2) * 30 }}
+          transition={{ duration: 0.5, delay: i * 0.03 }}
+        />
+      ))}
+    </motion.div>
+  );
+}

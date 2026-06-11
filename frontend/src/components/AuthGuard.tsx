@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Sidebar from "./Sidebar";
+import MobileNav from "./MobileNav";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -46,7 +47,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Sidebar />
-      <main className="ml-64 min-h-screen bg-[#09090b]">{children}</main>
+      <main className="min-h-screen bg-[#09090b] pb-20 lg:pb-0 lg:ml-64">{children}</main>
+      <MobileNav />
     </>
   );
 }
