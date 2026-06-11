@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SkillForge — AI Career Skill Analyzer",
+  title: "SkillGAP — AI Career Skill Analyzer",
   description: "Analyze your skills, identify gaps, and get a personalized learning roadmap to land your dream career in tech.",
 };
 
