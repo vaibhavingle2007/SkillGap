@@ -1,4 +1,4 @@
-# Skill Forge
+# SkillGAP
 
 > AI-powered skill gap analyzer and learning roadmap generator. Identify what you're missing for your target role and get a personalized path to get there.
 
