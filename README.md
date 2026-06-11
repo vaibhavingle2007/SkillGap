@@ -17,7 +17,7 @@ Skill Forge compares your current skills against the requirements of a target jo
 
 - **Live gap analysis** — fuzzy-matched against a static catalog of job roles
 - **Personalized roadmap** — static, curated content for every skill (no LLM round-trip on the hot path)
-- **Optional AI mode** — drop in a `NEBIUS_API_KEY` to enable dynamic LLM-generated roadmaps
+- **Optional AI mode** — drop in a `NVIDIA_API_KEY` to enable dynamic LLM-generated roadmaps
 - **Firebase auth** — email/password, Google, and GitHub OAuth
 - **Cloud sync** — analyses and progress are persisted to Firestore
 
