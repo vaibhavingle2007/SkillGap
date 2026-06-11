@@ -10,7 +10,7 @@ from routes import jobs, analysis, roadmap, resources, dashboard
 # Comma-separated list of allowed origins for CORS.
 # Defaults to localhost + the deployed frontend so local dev and
 # production both work out of the box.
-_ALLOWED_ORIGINS = os.getenv("FRONTEND_URL", "http://localhost:3000,https://skill-forge-sand.vercel.app").split(",")
+_ALLOWED_ORIGINS = os.getenv("FRONTEND_URL", "http://localhost:3000","https://skillgap-free.vercel.app").split(",")
 
 app = FastAPI(
     title="Skill Gap Analyzer API",
