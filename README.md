@@ -13,7 +13,7 @@
 
 ## Overview
 
-Skill Forge compares your current skills against the requirements of a target job role, surfaces the gaps, and generates a curated learning roadmap with hand-picked YouTube resources for each missing skill.
+SkillGAP compares your current skills against the requirements of a target job role, surfaces the gaps, and generates a curated learning roadmap with hand-picked YouTube resources for each missing skill.
 
 - **Live gap analysis** — fuzzy-matched against a static catalog of job roles
 - **Personalized roadmap** — static, curated content for every skill (no LLM round-trip on the hot path)
