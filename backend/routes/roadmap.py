@@ -19,6 +19,7 @@ def get_roadmap(
 ):
     """Generate a static learning roadmap from curated skill roadmaps."""
     result = get_static_roadmap(missing_skills)
+    result = _attach_youtube_videos(result)
     return result
 
 

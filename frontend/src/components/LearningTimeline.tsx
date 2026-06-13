@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const PROGRESS_KEY = "skillforge_roadmap_progress";
-const CELEBRATED_KEY = "skillforge_celebrated";
+const PROGRESS_KEY = "skillgap_roadmap_progress";
+const CELEBRATED_KEY = "skillgap_celebrated";
 
 /* ──────────────────────────── */
 /*  Local progress helpers       */
@@ -205,7 +205,7 @@ export function LearningTimelineMini({ mini = false }: { mini?: boolean }) {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const stored = sessionStorage.getItem("skillforge_analysis");
+      const stored = sessionStorage.getItem("skillgap_analysis");
       if (!stored) { setRoadmap(enhancedFallbackRoadmap); setIsLoading(false); return; }
       try {
         const parsed = JSON.parse(stored);
@@ -325,7 +325,7 @@ export default function LearningTimeline() {
     /* fallback fetch */
     (async () => {
       setIsLoading(true);
-      const stored = sessionStorage.getItem("skillforge_analysis");
+      const stored = sessionStorage.getItem("skillgap_analysis");
       if (!stored) { setItems(enhancedFallbackRoadmap); setTargetRole("Full-Stack Developer"); setIsLoading(false); return; }
       try {
         const parsed = JSON.parse(stored);

@@ -153,7 +153,7 @@ export default function LoginPage() {
             </svg>
           </Link>
           <h1 className="text-3xl font-black tracking-tighter text-white">
-            SkillForge
+            SkillGap
           </h1>
           <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-600">
             Secure Authentication

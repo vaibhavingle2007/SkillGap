@@ -261,7 +261,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!analysis) {
       try {
-        const cachedAnalysis = sessionStorage.getItem("skillforge_cached_analysis");
+        const cachedAnalysis = sessionStorage.getItem("skillgap_cached_analysis");
         if (cachedAnalysis) {
           const parsed = JSON.parse(cachedAnalysis);
           setAnalysis(parsed);
@@ -272,7 +272,7 @@ export default function DashboardPage() {
     }
     if (!roadmap) {
       try {
-        const cachedRoadmap = sessionStorage.getItem("skillforge_cached_roadmap");
+        const cachedRoadmap = sessionStorage.getItem("skillgap_cached_roadmap");
         if (cachedRoadmap) {
           const parsed = JSON.parse(cachedRoadmap);
           setRoadmap(parsed);

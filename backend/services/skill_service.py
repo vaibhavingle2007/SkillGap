@@ -115,6 +115,7 @@ def detect_skill_gaps(request: SkillGapDetectionRequest) -> SkillGapDetectionRes
         missing_skills=missing,
         matched_skills=matched,
         skill_gap_score=score,
+        match_percentage=score,
     )
 
 
@@ -260,7 +261,7 @@ def get_static_roadmap(missing_skills: List[str]) -> dict:
                 "skill": entry["skill"],
                 "learning_steps": entry["learning_steps"],
                 "estimated_time": entry["estimated_time"],
-                "youtube_videos": [],
+                "youtube_videos": entry.get("youtube_videos", []),
             })
 
     return {"roadmap": roadmap}

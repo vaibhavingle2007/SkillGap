@@ -1,7 +1,7 @@
 import SkillForm from "@/components/SkillForm";
 
 export const metadata = {
-  title: "Skill Input — SkillForge",
+  title: "Skill Input — SkillGap",
   description: "Enter your current skills and select your target job role to get a personalized analysis.",
 };
 

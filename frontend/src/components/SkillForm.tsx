@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AnalysisResults, { AnalysisResponse } from "./AnalysisResults";
 import { useAuth } from "@/context/AuthContext";
+import { useData } from "@/context/DataContext";
 import { saveUserAnalysis } from "@/lib/userData";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -50,6 +51,7 @@ export default function SkillForm() {
   const [rolesError, setRolesError] = useState<string | null>(null);
 
   const { user } = useAuth();
+  const { setAnalysis, setRoadmap } = useData();
   const router = useRouter();
 
   // Fetch job roles from backend on mount
@@ -114,7 +116,7 @@ export default function SkillForm() {
       target_role: role?.title || selectedRole,
     };
 
-    sessionStorage.setItem("skillforge_analysis", JSON.stringify(payload));
+    sessionStorage.setItem("skillgap_analysis", JSON.stringify(payload));
 
     try {
       const res = await fetch(`${API_BASE}/analyze-skills`, {
@@ -128,12 +130,31 @@ export default function SkillForm() {
         throw new Error(`Server error (${res.status}): ${errBody}`);
       }
 
-      const data: AnalysisResponse = await res.json();
-      const analysisResult = {
-        ...data,
-        target_role: role?.title || selectedRole,
+      const data = await res.json();
+      const targetRoleName = role?.title || selectedRole;
+
+      /* Normalise to the shape both AnalysisResults and the dashboard expect */
+      const normalized = {
+        target_role: targetRoleName,
+        match_percentage: data.match_percentage ?? data.skill_gap_score ?? 0,
+        missing_skills: data.missing_skills || [],
+        matched_skills: data.matched_skills || [],
+        skill_gaps: (data.missing_skills || []).map((name: string) => ({
+          skill_name: name,
+          required_proficiency: "intermediate",
+          current_proficiency: null,
+          gap_level: "missing" as const,
+        })),
+        met_skills: (data.matched_skills || []).map((name: string) => ({
+          skill_name: name,
+          required_proficiency: "intermediate",
+          current_proficiency: "intermediate",
+          gap_level: "met" as const,
+        })),
+        skill_gap_score: data.skill_gap_score,
       };
-      setResults(analysisResult);
+      setResults(normalized);
+      setAnalysis(normalized);
 
       if (user) {
         try {
@@ -141,20 +162,35 @@ export default function SkillForm() {
             name: skill,
             level: skillLevels[skill] || 50,
           }));
-          const matchPct = data.match_percentage ?? 0;
+          const matchPct = normalized.match_percentage ?? 0;
 
           await saveUserAnalysis(user, {
-            targetRole: role?.title || selectedRole,
+            targetRole: targetRoleName,
             skills,
             matchPercentage: matchPct,
-            missingSkills: data.skill_gaps?.map((s: { skill_name: string }) => s.skill_name) || [],
-            matchedSkills: data.met_skills?.map((s: { skill_name: string }) => s.skill_name) || [],
+            missingSkills: data.missing_skills || [],
+            matchedSkills: data.matched_skills || [],
           });
           setSavedToCloud(true);
         } catch (saveErr) {
           console.error("Failed to save to cloud:", saveErr);
           setSaveError(saveErr instanceof Error ? saveErr.message : "Failed to save to cloud");
         }
+      }
+
+      /* Also fetch the roadmap so the dashboard is ready */
+      try {
+        const roadmapRes = await fetch(`${API_BASE}/learning-roadmap`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (roadmapRes.ok) {
+          const roadmapData = await roadmapRes.json();
+          setRoadmap(roadmapData);
+        }
+      } catch (e) {
+        console.error("Failed to fetch roadmap:", e);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error occurred");

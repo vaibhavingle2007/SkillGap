@@ -61,10 +61,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const cachedAnalysis = sessionStorage.getItem("skillforge_cached_analysis");
+      const cachedAnalysis = sessionStorage.getItem("skillgap_cached_analysis");
       if (cachedAnalysis) setAnalysisState(JSON.parse(cachedAnalysis));
 
-      const cachedRoadmap = sessionStorage.getItem("skillforge_cached_roadmap");
+      const cachedRoadmap = sessionStorage.getItem("skillgap_cached_roadmap");
       if (cachedRoadmap) setRoadmapState(JSON.parse(cachedRoadmap));
     } catch {
       // ignore corrupt sessionStorage
@@ -73,15 +73,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const setAnalysis = (val: AnalysisResponse | null) => {
     setAnalysisState(val);
-    if (val) sessionStorage.setItem("skillforge_cached_analysis", JSON.stringify(val));
-    else sessionStorage.removeItem("skillforge_cached_analysis");
+    if (val) sessionStorage.setItem("skillgap_cached_analysis", JSON.stringify(val));
+    else sessionStorage.removeItem("skillgap_cached_analysis");
   };
 
   const setRoadmap = (val: RoadmapResponse | null) => {
     setRoadmapState(val);
     setCachedAt(new Date().toISOString());
-    if (val) sessionStorage.setItem("skillforge_cached_roadmap", JSON.stringify(val));
-    else sessionStorage.removeItem("skillforge_cached_roadmap");
+    if (val) sessionStorage.setItem("skillgap_cached_roadmap", JSON.stringify(val));
+    else sessionStorage.removeItem("skillgap_cached_roadmap");
   };
 
   const toggleAuthView = () => setAuthView((v) => (v === "signin" ? "signup" : "signin"));

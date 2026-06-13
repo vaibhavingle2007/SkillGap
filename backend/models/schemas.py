@@ -58,6 +58,7 @@ class SkillGapDetectionResponse(BaseModel):
     missing_skills: List[str]
     matched_skills: List[str]
     skill_gap_score: float
+    match_percentage: float = 0.0
 
 
 class LearningRoadmapRequest(BaseModel):
