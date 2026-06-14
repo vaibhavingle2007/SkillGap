@@ -63,8 +63,8 @@ const stats = [
 
 const skills = [
   "React", "TypeScript", "Node.js", "Python", "SQL", "Docker",
-  "AWS", "Kubernetes", "GraphQL", " Rust", "Next.js", "Postgres",
-  "Redis", "MongoDB", "TensorFlow", "PyTorch", " Go", "Java",
+  "AWS", "Kubernetes", "GraphQL", "Rust", "Next.js", "Postgres",
+  "Redis", "MongoDB", "TensorFlow", "PyTorch", "Go", "Java",
   "System Design", "DevOps",
 ];
 
