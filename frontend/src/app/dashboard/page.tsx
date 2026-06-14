@@ -303,6 +303,31 @@ export default function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Keep quest progress in sync after completing quests on the roadmap page.
+  // The dashboard may stay mounted across client-side navigation, so re-read
+  // progress whenever the tab regains focus/visibility or storage changes.
+  useEffect(() => {
+    const syncProgress = () => {
+      try {
+        const progressRaw = sessionStorage.getItem("skillgap_roadmap_progress");
+        setRoadmapProgress(progressRaw ? JSON.parse(progressRaw) : {});
+      } catch {
+        // ignore corrupt sessionStorage
+      }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") syncProgress();
+    };
+    window.addEventListener("focus", syncProgress);
+    window.addEventListener("storage", syncProgress);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.removeEventListener("focus", syncProgress);
+      window.removeEventListener("storage", syncProgress);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
+
   /* ── Derived values (before any early return) ── */
   const baseScore = analysis ? Math.round(analysis.match_percentage || analysis.skill_gap_score || 0) : 0;
   const matchedSkills = analysis?.matched_skills || [];
@@ -320,6 +345,8 @@ export default function DashboardPage() {
     : 0;
   const questProgress = totalSteps > 0 ? completedSteps / totalSteps : 0;
   const score = Math.round(baseScore + (100 - baseScore) * questProgress);
+  const totalXP = completedSteps * 50;
+  const level = Math.floor(totalXP / 100) + 1;
 
   const roadmapItems: RoadmapItem[] = roadmap
     ? roadmap.roadmap.map((r) => ({
