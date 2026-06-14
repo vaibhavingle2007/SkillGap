@@ -167,11 +167,22 @@ function EmptyState() {
 /* ------------------------------------------------------------------ */
 /*  Heatmap                                                           */
 /* ------------------------------------------------------------------ */
-function Heatmap() {
-  // Generate dummy heatmap data (in real app, from progress timestamps)
+function Heatmap({ completionRate }: { completionRate: number }) {
   const weeks = 12;
   const days = 7;
-  const data = Array.from({ length: weeks * days }, () => Math.random());
+  const totalSquares = weeks * days;
+  const activeSquares = Math.round(totalSquares * completionRate);
+
+  // Generate deterministic "activity" based on completion rate
+  const data = Array.from({ length: totalSquares }, (_, i) => {
+    if (i < activeSquares) {
+      // Higher completion = more green, medium = purple
+      return i < activeSquares * 0.6 ? "#10b981" : "#6366f1";
+    }
+    return null;
+  });
+
+  const streakDays = Math.max(1, Math.round(completionRate * 14));
 
   return (
     <div className="space-y-3">
@@ -179,9 +190,9 @@ function Heatmap() {
         <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-500">Activity</h4>
         <span className="flex items-center gap-1 text-xs text-zinc-400">
           <svg className="h-3.5 w-3.5 text-orange-400 animate-pulse" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-            <path d="M7.87438 20.6206C8.18252 21.0525 8.85212 21.0376 9.14182 20.5904C11.712 16.6515 14.0671 16.0371 14.0671 13.3231C14.0671 10.2165 12.1039 7.87185 9.3412 7.81576C6.34882 7.75544 4.24865 10.4089 4.26772 13.4179C4.29199 17.1773 6.93144 18.0253 7.87438 20.6206ZM13.6826 17.9483C13.6826 19.5267 15.0212 22.0915 15.4778 22.4875C15.7782 22.7517 16.452 22.4889 16.5432 22.1456C17.2793 19.3589 19.3976 17.6338 19.3976 14.5225C19.3976 12.2212 17.9961 10.0056 15.6387 10.2233C13.183 10.4498 12.1722 12.3937 12.1722 14.2293C12.1722 15.8471 13.2209 16.6535 13.6826 17.9483Z" />
+            <path d="M7.87438 20.6206C8.18252 21.0525 8.85212 21.0376 9.14182 20.5904C11.712 16.6515 14.0671 16.0371 14.0671 13.3231C14.0671 10.2165 12.1039 7.87185 9.3412 7.81576C6.34882 7.75544 4.24865 10.4089 4.26772 13.4179C4.29199 17.1773 6.93144 18.0253 7.87438 20.6206ZM13.6826 17.9483C13.6826 19.5267 15.0212 22.0915 15.4778 22.4875C15.7782 22.7517 16.452 22.4889 16.47 22.1456C17.2793 19.3589 19.3976 17.6338 19.3976 14.5225C19.3976 12.2212 17.9961 10.0056 15.6387 10.2233C13.183 10.4498 12.1722 12.3937 12.1722 14.2293C12.1722 15.8471 13.2209 16.6535 13.6826 17.9483Z" />
           </svg>
-          3 day streak
+          {streakDays} day streak
         </span>
       </div>
       <div className="flex gap-[3px]">
@@ -189,14 +200,14 @@ function Heatmap() {
           <div key={w} className="flex flex-col gap-[3px]">
             {Array.from({ length: days }, (_, d) => {
               const idx = w * days + d;
-              const val = data[idx];
+              const color = data[idx];
               return (
                 <div
                   key={d}
-                  className="h-[10px] w-[10px] rounded-sm"
+                  className="h-[10px] w-[10px] rounded-sm transition-colors duration-300"
                   style={{
-                    backgroundColor: val > 0.7 ? "#10b981" : val > 0.4 ? "#6366f1" : val > 0.1 ? "#3f3f46" : "#27272a",
-                    opacity: val > 0.7 ? 1 : val > 0.4 ? 0.8 : 0.5,
+                    backgroundColor: color || "#27272a",
+                    opacity: color ? (color === "#10b981" ? 1 : 0.8) : 0.5,
                   }}
                 />
               );
@@ -246,6 +257,7 @@ export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [now, setNow] = useState<Date | null>(null);
   const [skillFilter, setSkillFilter] = useState<"all" | "matched" | "missing">("all");
+  const [roadmapProgress, setRoadmapProgress] = useState<Record<string, string[]>>({});
 
   const firstName = user?.displayName?.split(" ")[0] || "Explorer";
 
@@ -281,14 +293,33 @@ export default function DashboardPage() {
         // ignore corrupt sessionStorage
       }
     }
+    // Read roadmap quest progress
+    try {
+      const progressRaw = sessionStorage.getItem("skillgap_roadmap_progress");
+      if (progressRaw) setRoadmapProgress(JSON.parse(progressRaw));
+    } catch {
+      // ignore
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* ── Derived values (before any early return) ── */
-  const gapResult = analysis;
-  const score = analysis ? Math.round(analysis.match_percentage || analysis.skill_gap_score || 0) : 0;
+  const baseScore = analysis ? Math.round(analysis.match_percentage || analysis.skill_gap_score || 0) : 0;
   const matchedSkills = analysis?.matched_skills || [];
   const missingSkills = analysis?.missing_skills || [];
+
+  /* Quest progress calculation */
+  const totalSteps = roadmap
+    ? roadmap.roadmap.reduce((acc, r) => acc + (r.learning_steps?.length || 0), 0)
+    : 0;
+  const completedSteps = roadmap && roadmapProgress
+    ? roadmap.roadmap.reduce((acc, r) => {
+        const key = r.skill.toLowerCase().trim();
+        return acc + (roadmapProgress[key] || []).length;
+      }, 0)
+    : 0;
+  const questProgress = totalSteps > 0 ? completedSteps / totalSteps : 0;
+  const score = Math.round(baseScore + (100 - baseScore) * questProgress);
 
   const roadmapItems: RoadmapItem[] = roadmap
     ? roadmap.roadmap.map((r) => ({
@@ -346,13 +377,13 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {gapResult.target_role && (
+          {analysis.target_role && (
             <div className="glass-card rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-4 lg:p-5">
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-500/10 text-2xl">🎯</div>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-zinc-500">Target Role</p>
-                  <p className="text-lg font-bold text-white">{gapResult.target_role}</p>
+                  <p className="text-lg font-bold text-white">{analysis.target_role}</p>
                 </div>
               </div>
             </div>
@@ -424,7 +455,7 @@ export default function DashboardPage() {
 
         {/* Activity Heatmap - spans 2 cols */}
         <BentoCard color="#f59e0b" colSpan={2} rowSpan={1}>
-          <Heatmap />
+          <Heatmap completionRate={questProgress} />
         </BentoCard>
       </div>
 
