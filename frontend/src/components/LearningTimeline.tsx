@@ -55,10 +55,6 @@ const XP_PER_STEP = 50;
 function getLevel(totalXP: number) {
   return Math.floor(totalXP / 100) + 1;
 }
-function getXPForNextLevel(totalXP: number) {
-  const level = getLevel(totalXP);
-  return level * 100;
-}
 
 /* ── Circular Progress ── */
 function CircularProgress({ value, size = 64, strokeWidth = 4, color = "#6366f1" }: { value: number; size?: number; strokeWidth?: number; color?: string }) {
@@ -80,7 +76,7 @@ function CircularProgress({ value, size = 64, strokeWidth = 4, color = "#6366f1"
 
 /* ── Celebration Overlay ── */
 function CelebrationOverlay({ onClose }: { onClose: () => void }) {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; color: string; delay: number }>>([]);
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; color: string; delay: number; bx: number; by: number }>>([]);
   useEffect(() => {
     const p = Array.from({ length: 40 }, (_, i) => ({
       id: i,
@@ -88,6 +84,8 @@ function CelebrationOverlay({ onClose }: { onClose: () => void }) {
       y: Math.random() * 100,
       color: ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#3b82f6"][i % 5],
       delay: Math.random() * 0.5,
+      bx: (Math.random() - 0.5) * 300,
+      by: (Math.random() - 0.5) * 300,
     }));
     setParticles(p);
   }, []);
@@ -105,7 +103,7 @@ function CelebrationOverlay({ onClose }: { onClose: () => void }) {
           className="absolute h-2 w-2 rounded-full"
           style={{ backgroundColor: p.color, left: `${p.x}%`, top: `${p.y}%` }}
           initial={{ scale: 0, opacity: 1 }}
-          animate={{ scale: [0, 1.5, 0], opacity: [1, 1, 0], x: [0, (Math.random() - 0.5) * 300], y: [0, (Math.random() - 0.5) * 300] }}
+          animate={{ scale: [0, 1.5, 0], opacity: [1, 1, 0], x: [0, p.bx], y: [0, p.by] }}
           transition={{ duration: 1.5, delay: p.delay, ease: "easeOut" }}
         />
       ))}
@@ -276,9 +274,9 @@ export default function LearningTimeline() {
         try {
           const docs = await getRoadmapProgress(user);
           const mapped: Record<string, string[]> = {};
-          docs.forEach((d: any) => { const key = normaliseSkill(d.skillName || ""); mapped[key] = d.completedSteps || []; });
+          docs.forEach((d: { skillName?: string; completedSteps?: string[] }) => { const key = normaliseSkill(d.skillName || ""); mapped[key] = d.completedSteps || []; });
           setProgress(mapped);
-        } catch (e) { setProgress(loadLocalProgress()); }
+        } catch { setProgress(loadLocalProgress()); }
       } else { setProgress(loadLocalProgress()); }
     })();
   }, [user]);
@@ -303,7 +301,7 @@ export default function LearningTimeline() {
   useEffect(() => {
     if (roadmap && roadmap.roadmap.length > 0) {
       const adapted = roadmap.roadmap.map((r) => {
-        const steps = r.learning_steps.map((s: any) => {
+        const steps = r.learning_steps.map((s: string | { step: string }) => {
           if (typeof s === "string") return s;
           if (s && typeof s === "object" && "step" in s) return s.step;
           return String(s);

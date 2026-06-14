@@ -16,7 +16,7 @@ export default function SkillInputPage() {
         </div>
         <h1 className="text-4xl font-black tracking-tight text-white lg:text-5xl">Define Your Path</h1>
         <p className="mt-3 text-zinc-400 max-w-xl text-lg">
-          Tell us where you are and where you want to go. We'll map out the skills you need to get there.
+          Tell us where you are and where you want to go. We&apos;ll map out the skills you need to get there.
         </p>
       </div>
 

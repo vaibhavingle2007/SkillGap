@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, ReactNode } from "react";
+import { useRef, ReactNode, CSSProperties } from "react";
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 
 interface TiltCardProps {
@@ -50,10 +50,9 @@ export default function TiltCard({ children, className = "", tiltStrength = 10, 
         rotateY,
         transformStyle: "preserve-3d",
         perspective: 1000,
-        // @ts-ignore - CSS custom property
         "--gx": `${x.get() * 100}%`,
         "--gy": `${y.get() * 100}%`,
-      } as any}
+      } as CSSProperties & Record<`--${string}`, string>}
       className={`relative ${className}`}
     >
       {/* Glow effect following cursor */}

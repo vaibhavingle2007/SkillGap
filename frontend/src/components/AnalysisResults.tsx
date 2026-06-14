@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 
 export interface SkillGap {
   skill_name: string;
@@ -27,14 +26,6 @@ const skillCategories = [
   " Soft Skills",
 ];
 
-function generateRadarData(current: number[], required: number[]) {
-  return skillCategories.map((skill, i) => ({
-    skill,
-    current: current[i] || 0,
-    required: required[i] || 0,
-  }));
-}
-
 function RadarChart({
   current,
   required,
@@ -42,7 +33,6 @@ function RadarChart({
   current: number[];
   required: number[];
 }) {
-  const data = generateRadarData(current, required);
   const maxValue = 100;
 
   // Calculate points for polygon

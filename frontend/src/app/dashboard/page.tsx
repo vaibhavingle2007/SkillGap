@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useData } from "@/context/DataContext";
@@ -330,8 +330,8 @@ export default function DashboardPage() {
 
   /* ── Derived values (before any early return) ── */
   const baseScore = analysis ? Math.round(analysis.match_percentage || analysis.skill_gap_score || 0) : 0;
-  const matchedSkills = analysis?.matched_skills || [];
-  const missingSkills = analysis?.missing_skills || [];
+  const matchedSkills = useMemo(() => analysis?.matched_skills || [], [analysis]);
+  const missingSkills = useMemo(() => analysis?.missing_skills || [], [analysis]);
 
   /* Quest progress calculation */
   const totalSteps = roadmap
@@ -345,8 +345,6 @@ export default function DashboardPage() {
     : 0;
   const questProgress = totalSteps > 0 ? completedSteps / totalSteps : 0;
   const score = Math.round(baseScore + (100 - baseScore) * questProgress);
-  const totalXP = completedSteps * 50;
-  const level = Math.floor(totalXP / 100) + 1;
 
   const roadmapItems: RoadmapItem[] = roadmap
     ? roadmap.roadmap.map((r) => ({
