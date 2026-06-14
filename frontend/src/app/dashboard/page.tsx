@@ -284,13 +284,11 @@ export default function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!mounted) return <DashSkeleton />;
-  if (!analysis) return <EmptyState />;
-
+  /* ── Derived values (before any early return) ── */
   const gapResult = analysis;
-  const score = Math.round(gapResult.match_percentage || gapResult.skill_gap_score || 0);
-  const matchedSkills = gapResult.matched_skills || [];
-  const missingSkills = gapResult.missing_skills || [];
+  const score = analysis ? Math.round(analysis.match_percentage || analysis.skill_gap_score || 0) : 0;
+  const matchedSkills = analysis?.matched_skills || [];
+  const missingSkills = analysis?.missing_skills || [];
 
   const roadmapItems: RoadmapItem[] = roadmap
     ? roadmap.roadmap.map((r) => ({
@@ -317,6 +315,10 @@ export default function DashboardPage() {
         return [...matchedSkills, ...missingSkills];
     }
   }, [skillFilter, matchedSkills, missingSkills]);
+
+  /* ── Early returns after ALL hooks ── */
+  if (!mounted) return <DashSkeleton />;
+  if (!analysis) return <EmptyState />;
 
   const timeString = now
     ? now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })

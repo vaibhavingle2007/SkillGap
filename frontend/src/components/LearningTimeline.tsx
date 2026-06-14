@@ -494,7 +494,7 @@ export default function LearningTimeline() {
                     : "border-zinc-800/50 hover:border-zinc-700"
                 }`}>
                   {/* Collapsible header */}
-                  <button onClick={() => setExpandedIdx(isExpanded ? -1 : idx)} className="w-full p-5 text-left">
+                  <div role="button" tabIndex={0} onClick={() => setExpandedIdx(isExpanded ? -1 : idx)} onKeyDown={(e) => {if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpandedIdx(isExpanded ? -1 : idx); } }} className="w-full p-5 text-left cursor-pointer select-none">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
@@ -520,7 +520,7 @@ export default function LearningTimeline() {
                           <span className="text-xs font-bold text-zinc-600">{item.estimated_time}</span>
                         </div>
                       </div>
-                      <div className="mt-1 flex gap-2">
+                      <div className="mt-1 flex gap-2" onClick={(e) => e.stopPropagation()} role="presentation">
                         {!isAllDone && stepList.length > 0 && (
                           <button
                             onClick={(e) => { e.stopPropagation(); markComplete(item.skill, item.learning_steps); }}
@@ -538,12 +538,16 @@ export default function LearningTimeline() {
                             <RotateCcw className="h-3.5 w-3.5" />
                           </button>
                         )}
-                        <div className={`flex h-6 w-6 items-center justify-center rounded-full border border-zinc-700 transition-all ${isExpanded ? "rotate-180 border-indigo-500 bg-indigo-500/10" : ""}`}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setExpandedIdx(isExpanded ? -1 : idx); }}
+                          className="flex h-6 w-6 items-center justify-center rounded-full border border-zinc-700 transition-all hover:border-indigo-500/30"
+                          aria-label={isExpanded ? "Collapse" : "Expand"}
+                        >
                           {isExpanded ? <ChevronUp className="h-4 w-4 text-indigo-400" /> : <ChevronDown className="h-4 w-4 text-zinc-500" />}
-                        </div>
+                        </button>
                       </div>
                     </div>
-                  </button>
+                  </div>
 
                   {/* Expanded detail — steps + resources */}
                   {isExpanded && (
