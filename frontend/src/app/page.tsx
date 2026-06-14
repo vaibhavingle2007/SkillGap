@@ -9,47 +9,48 @@ import Reveal from "@/components/landing/Reveal";
 import CountUp from "@/components/landing/CountUp";
 import Magnetic from "@/components/landing/Magnetic";
 import TiltCard from "@/components/landing/TiltCard";
+import { LANDING_ICONS, type LandingIconName } from "@/components/landing/Icons";
 
 /* ──────────────────────────── */
 /*  Landing Page — Phase 1     */
 /* ──────────────────────────── */
 
-const features = [
+const features: { title: string; desc: string; icon: LandingIconName }[] = [
   {
     title: "AI Analysis",
     desc: "Identify exact skill gaps against real-world industry requirements with pinpoint accuracy.",
-    iconPath: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3",
+    icon: "globe",
   },
   {
     title: "Learning Roadmap",
     desc: "Follow a curated, high-velocity learning path designed to get you hired in record time.",
-    iconPath: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13 5.447-2.724A1 1 0 0115 13v10.618a1 1 0 01-.553.894L9 17m0-13v13m0 0l-5.447 2.724A1 1 0 011 16.382V5.618a1 1 0 011.447-.894L9 7",
+    icon: "roadmap",
   },
   {
     title: "Curated Resources",
     desc: "Get hand-picked, world-class resources for every single skill gap.",
-    iconPath: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 2.999 6.253 1.5 8.084 1.5 10s.557 3.523 1.5 4.5M12 6.253v13c0-1.113.832-2.127 2-2.923 1.168-.796 2.746-1.253 4.5-1.253s3.332.477 4.5 1.253c.243.177.46.385.643.614",
+    icon: "book",
   },
 ];
 
-const howItWorks = [
+const howItWorks: { step: string; title: string; desc: string; icon: LandingIconName }[] = [
   {
     step: "01",
     title: "Map your skills",
     desc: "Tell us what you know. We'll benchmark it against real job requirements.",
-    icon: "M9 7h6m0 10v-3m6 3h-4m-6 3V7m0 3h4M3 7h1m16 6h-1",
+    icon: "globe",
   },
   {
     step: "02",
     title: "See the gap",
     desc: "Get a precise gap analysis with matched and missing skills for your target role.",
-    icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0",
+    icon: "book",
   },
   {
     step: "03",
     title: "Follow the roadmap",
     desc: "Receive a personalized, step-by-step learning path with curated resources.",
-    icon: "M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13 5.447-2.724A1 1 0 0115 13v10.618a1 1 0 01-.553.894L9 17m0-13v13",
+    icon: "roadmap",
   },
 ];
 
@@ -247,21 +248,22 @@ export default function Home() {
 
         {/* Feature Cards */}
         <div className="relative z-10 mx-auto mt-24 grid max-w-6xl gap-6 px-4 sm:grid-cols-3">
-          {features.map((feature, i) => (
+          {features.map((feature, i) => {
+            const Icon = LANDING_ICONS[feature.icon];
+            return (
             <Reveal key={i} delay={i * 0.1}>
               <TiltCard className="h-full" glowColor="rgba(99, 102, 241, 0.15)" tiltStrength={6}>
                 <div className="glass-card group flex h-full flex-col items-start rounded-[2rem] border border-zinc-800/50 p-8 text-left transition-all hover:-translate-y-2">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 shadow-glow">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d={feature.iconPath} />
-                    </svg>
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 shadow-glow transition-colors group-hover:bg-indigo-500/20 group-hover:text-indigo-300">
+                    <Icon size={26} />
                   </div>
                   <h3 className="mb-3 text-lg font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">{feature.title}</h3>
                   <p className="text-sm font-medium leading-relaxed text-zinc-300">{feature.desc}</p>
                 </div>
               </TiltCard>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -279,7 +281,9 @@ export default function Home() {
           </Reveal>
 
           <div className="mt-16 grid gap-8 sm:grid-cols-3">
-            {howItWorks.map((item, i) => (
+            {howItWorks.map((item, i) => {
+              const Icon = LANDING_ICONS[item.icon];
+              return (
               <Reveal key={i} delay={i * 0.15}>
                 <div className="relative group">
                   {/* Connector line (desktop) */}
@@ -292,17 +296,16 @@ export default function Home() {
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500 text-white text-xs font-black">
                       {item.step}
                     </div>
-                    <div className="mt-4 mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 mx-auto shadow-glow">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d={item.icon} />
-                      </svg>
+                    <div className="mt-4 mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 mx-auto shadow-glow transition-colors group-hover:bg-indigo-500/20 group-hover:text-indigo-300">
+                      <Icon size={26} />
                     </div>
                     <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
                     <p className="text-sm text-zinc-300 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
